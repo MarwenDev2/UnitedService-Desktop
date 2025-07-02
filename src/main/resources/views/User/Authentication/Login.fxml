@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.test.Controllers.User.Authentication.LoginController"
+            stylesheets="@/styles/loginstyle.css"
+            prefWidth="800" prefHeight="500">
+
+    <!-- 🔐 Login Form -->
+    <center>
+        <VBox alignment="CENTER" spacing="15" styleClass="login-section" prefWidth="300" maxWidth="300">
+            <Label text="Connexion à Falleh Tech" styleClass="title"/>
+
+            <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
+            <Label fx:id="emailError" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;" visible="false" />
+
+            <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="input-field"/>
+            <Label fx:id="passwordError" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;" visible="false" />
+
+            <Button fx:id="loginButton" text="Se Connecter" styleClass="green-button"/>
+
+            <HBox spacing="5" alignment="CENTER">
+                <Label text="Pas encore inscrit ?" />
+                <Hyperlink fx:id="signup" text="Rejoignez-nous !" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
