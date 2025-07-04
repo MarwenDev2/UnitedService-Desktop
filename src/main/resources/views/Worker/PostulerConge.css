@@ -1,49 +1,89 @@
-/* PostulerConge.css */
+/* Unified dark-golden theme */
 .root {
-    -fx-background-color: #0A0A0A;
-    -fx-padding: 40;
-    -fx-font-family: "Segoe UI";
+    -fx-background-color: #ffffff;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-padding: 50;
 }
 
-.form-title {
-    -fx-font-size: 26px;
+/* 🌟 Page title */
+.page-title {
+    -fx-font-size: 32px;
     -fx-text-fill: #C6A34F;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #000000, 6, 0.3, 0, 2);
 }
 
-.label {
-    -fx-text-fill: #E0E0E0;
-    -fx-font-size: 14px;
+/* 🧾 Form label */
+.form-label {
+    -fx-text-fill: #070101;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
 }
 
+/* ✏️ Input fields */
 .text-area, .combo-box, .date-picker {
-    -fx-background-color: #1A1A1A;
-    -fx-text-fill: #FFF;
+    -fx-background-color: #d8d8d8;
+    -fx-text-fill: #000000;
     -fx-border-color: #C6A34F;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 8;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-prompt-text-fill: #AAAAAA;
+    -fx-transition: all 0.3s ease-in-out;
 }
 
+/* Focus highlight */
 .text-area:focused, .combo-box:focused, .date-picker:focused {
     -fx-border-color: #FFD700;
+    -fx-effect: dropshadow(gaussian, #FFD700AA, 10, 0.2, 0, 0);
 }
 
-.submit-button {
+/* 🟨 Submit button */
+.primary-button {
     -fx-background-color: #C6A34F;
-    -fx-text-fill: #000;
-    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-padding: 10 18;
-    -fx-background-radius: 8;
+    -fx-padding: 12 20;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
+    -fx-transition: all 0.2s ease-in-out;
 }
 
-.submit-button:hover {
+.primary-button:hover {
     -fx-background-color: #FFD700;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
-#errorLabel {
-    -fx-font-size: 13px;
-    -fx-padding: 6 0 0 0;
+/* ⬛ Cancel button */
+.secondary-button {
+    -fx-background-color: #2B2B2B;
+    -fx-text-fill: #C6A34F;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 10 18;
+    -fx-border-color: #3C3C3C;
+    -fx-border-width: 1.2;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #3A3A3A;
+}
+
+/* 🧾 Error/success messages */
+.feedback-label {
+    -fx-font-size: 14px;
+    -fx-padding: 8 0 0 0;
+    -fx-text-fill: #ff6f61;
+}
+
+/* 📐 Grid and layout styling */
+.form-grid {
+    -fx-padding: 20;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #2C2C2C;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
 }

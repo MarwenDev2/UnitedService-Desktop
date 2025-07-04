@@ -1,0 +1,98 @@
+/* admin-conge.css - Golden Charte Theme */
+
+/* Page Titles */
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C6A34F;
+    -fx-effect: dropshadow(gaussian, #000000, 6, 0.3, 0, 2);
+}
+
+.subtitle-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+/* Statistic Cards */
+.stat-label {
+    -fx-font-size: 16px;
+    -fx-background-color: #F8F1DC;
+    -fx-text-fill: #333333;
+    -fx-padding: 10 20;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0.2, 0, 1);
+    -fx-transition: all 0.3s ease;
+}
+
+/* Filters & Labels */
+.form-label {
+    -fx-text-fill: #000;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: #fdfdfd;
+    -fx-border-color: #C6A34F;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 6 10;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #888;
+}
+
+.combo-box:focused {
+    -fx-border-color: #FFD700;
+    -fx-effect: dropshadow(gaussian, #FFD700AA, 10, 0.2, 0, 0);
+}
+
+/* Table */
+.table-view {
+    -fx-background-color: #fffaf0;
+    -fx-border-color: #C6A34F;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 10;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.table-column {
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-weight: bold;
+}
+
+/* Buttons */
+.button {
+    -fx-font-size: 14px;
+    -fx-padding: 6 12;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-font-size: 14px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-approve {
+    -fx-background-color: #A5D6A7;
+    -fx-text-fill: #1B5E20;
+}
+
+.btn-approve:hover {
+    -fx-background-color: #81C784;
+}
+
+.btn-refuse {
+    -fx-background-color: #EF9A9A;
+    -fx-text-fill: #B71C1C;
+}
+
+.btn-refuse:hover {
+    -fx-background-color: #E57373;
+}

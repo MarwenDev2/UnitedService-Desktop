@@ -12,11 +12,11 @@ import java.util.List;
 public class NotificationService implements CrudService<Notification> {
 
     private final Connection connection;
-    private final UserService userService;
+    private final WorkerService userService;
 
     public NotificationService() {
         connection = Database.getInstance().getConnection();
-        userService = new UserService();
+        userService = new WorkerService();
     }
 
     @Override

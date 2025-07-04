@@ -28,7 +28,7 @@
 
                     <Region fx:id="navbarSpacer" HBox.hgrow="ALWAYS"/>
                     <!-- ✅ Bouton Favoris -->
-                    <Button fx:id="btnFavoris" text="❤" onAction="#goToFavoris" styleClass="icon-button"/>
+                    <Button fx:id="notificationBtn" text="🔔" styleClass="notification-btn"/>
 
                     <!-- 👇 Role Label -->
                     <Label fx:id="roleLabel" style="-fx-font-size: 12px; -fx-text-fill: #666;" />

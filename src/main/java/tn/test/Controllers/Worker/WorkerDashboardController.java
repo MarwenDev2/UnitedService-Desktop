@@ -1,16 +1,21 @@
+// WorkerDashboardController.java
 package tn.test.Controllers.Worker;
 
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
 import tn.test.entities.DemandeConge;
 import tn.test.entities.User;
 import tn.test.services.DemandeCongeService;
 
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
 
-public class WorkerDashboardController {
+public class WorkerDashboardController implements Initializable {
 
     @FXML private Label welcomeLabel;
     @FXML private Label pendingCountLabel;
@@ -22,7 +27,7 @@ public class WorkerDashboardController {
     private final DemandeCongeService congeService = new DemandeCongeService();
     private User currentUser;
 
-    // Called automatically when the view is loaded
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupTable();
     }
@@ -57,9 +62,17 @@ public class WorkerDashboardController {
 
         List<DemandeConge> recentConges = congeService.getRecentCongeByUser(currentUser.getId(), 5);
         recentLeavesTable.getItems().setAll(recentConges);
+
+        applyFadeTransition(recentLeavesTable);
     }
 
-    // Optional: show alert if needed
+    private void applyFadeTransition(TableView<?> table) {
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), table);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.play();
+    }
+
     private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

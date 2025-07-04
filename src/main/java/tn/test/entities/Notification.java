@@ -10,7 +10,7 @@ import java.util.List;
 public class Notification {
 
     private int id;
-    private User recipient;
+    private Worker recipient;
     private String message;
     private LocalDateTime timestamp;
     private boolean read;
@@ -19,7 +19,7 @@ public class Notification {
         // Default constructor
     }
 
-    public Notification(int id, User recipient, String message, LocalDateTime timestamp, boolean read) {
+    public Notification(int id, Worker recipient, String message, LocalDateTime timestamp, boolean read) {
         this.id = id;
         this.recipient = recipient;
         this.message = message;
@@ -35,11 +35,11 @@ public class Notification {
         this.id = id;
     }
 
-    public User getRecipient() {
+    public Worker getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(User recipient) {
+    public void setRecipient(Worker recipient) {
         this.recipient = recipient;
     }
 

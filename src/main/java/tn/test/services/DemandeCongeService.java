@@ -23,9 +23,10 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
     @Override
     public boolean add(DemandeConge demande) {
         String sql = """
-        INSERT INTO demande_conge (worker_id, start_date, end_date, type, reason, status, secretaire_decision_id, rh_decision_id, admin_decision_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """;
+    INSERT INTO demande_conge (worker_id, start_date, end_date, type, reason, status,
+    secretaire_decision_id, rh_decision_id, admin_decision_id, date_demande)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+""";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, demande.getWorker().getId());
@@ -38,6 +39,8 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             stmt.setObject(7, demande.getSecretaireDecision() != null ? demande.getSecretaireDecision().getId() : null, Types.INTEGER);
             stmt.setObject(8, demande.getRhDecision() != null ? demande.getRhDecision().getId() : null, Types.INTEGER);
             stmt.setObject(9, demande.getAdminDecision() != null ? demande.getAdminDecision().getId() : null, Types.INTEGER);
+            stmt.setObject(10, demande.getDateDemande() != null ? Date.valueOf(demande.getDateDemande()) : null, Types.DATE);
+
 
             int rowsInserted = stmt.executeUpdate();
             System.out.println("✅ DemandeConge added.");
@@ -52,9 +55,10 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
     @Override
     public void update(DemandeConge demande) {
         String sql = """
-            UPDATE demande_conge SET worker_id = ?, start_date = ?, end_date = ?, type = ?, reason = ?, status = ?, 
-            secretaire_decision_id = ?, rh_decision_id = ?, admin_decision_id = ? WHERE id = ?
-        """;
+        UPDATE demande_conge SET worker_id = ?, start_date = ?, end_date = ?, type = ?, reason = ?, status = ?, 
+        secretaire_decision_id = ?, rh_decision_id = ?, admin_decision_id = ?, date_demande = ? WHERE id = ?
+    """;
+
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, demande.getWorker().getId());
@@ -67,8 +71,9 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             stmt.setObject(7, demande.getSecretaireDecision() != null ? demande.getSecretaireDecision().getId() : null, Types.INTEGER);
             stmt.setObject(8, demande.getRhDecision() != null ? demande.getRhDecision().getId() : null, Types.INTEGER);
             stmt.setObject(9, demande.getAdminDecision() != null ? demande.getAdminDecision().getId() : null, Types.INTEGER);
+            stmt.setObject(10, demande.getDateDemande() != null ? Date.valueOf(demande.getDateDemande()) : null, Types.DATE);
+            stmt.setInt(11, demande.getId());
 
-            stmt.setInt(10, demande.getId());
             stmt.executeUpdate();
             System.out.println("✅ DemandeConge updated.");
         } catch (SQLException e) {
@@ -251,6 +256,67 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         return list;
     }
 
+    public boolean hasPendingRequest(int workerId) {
+        String query = "SELECT COUNT(*) FROM demande_conge WHERE worker_id = ? AND status IN (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, workerId);
+            stmt.setString(2, Status.EN_ATTENTE_SECRETAIRE.name());
+            stmt.setString(3, Status.EN_ATTENTE_ADMIN.name());
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public int countByStatus(Status status) {
+        String sql = "SELECT COUNT(*) FROM demande_conge WHERE status = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, status.name());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void updateSecretaireStatus(int demandeId, boolean isApproved) {
+        Status newStatus = isApproved ? Status.EN_ATTENTE_RH : Status.REFUSE_SECRETAIRE;
+        updateStatus(demandeId, newStatus);
+    }
+
+    public void updateRHStatus(int demandeId, boolean isApproved) {
+        Status newStatus = isApproved ? Status.EN_ATTENTE_ADMIN : Status.REFUSE_RH;
+        updateStatus(demandeId, newStatus);
+    }
+
+    public void finalApprove(int demandeId, boolean isApproved) {
+        Status newStatus = isApproved ? Status.ACCEPTE : Status.REFUSE_ADMIN;
+        updateStatus(demandeId, newStatus);
+    }
+
+
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM demande_conge";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 
     private DemandeConge extractDemande(ResultSet rs) throws SQLException {
         DemandeConge d = new DemandeConge();
@@ -289,6 +355,9 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
 
         int admId = rs.getInt("admin_decision_id");
         if (admId != 0) d.setAdminDecision(decisionService.findById(admId));
+
+        if (rs.getDate("date_demande") != null)
+            d.setDateDemande(rs.getDate("date_demande").toLocalDate());
 
         return d;
     }

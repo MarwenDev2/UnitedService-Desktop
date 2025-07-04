@@ -13,12 +13,15 @@ public class DemandeConge {
     private Decision secretaireDecision;
     private Decision rhDecision;
     private Decision adminDecision;
+    private LocalDate dateDemande;
 
     public DemandeConge() {
         // Default constructor
     }
 
-    public DemandeConge(int id, Worker worker, LocalDate startDate, LocalDate endDate, TypeConge type, String reason, Status status, Decision secretaireDecision, Decision rhDecision, Decision adminDecision) {
+    public DemandeConge(int id, Worker worker, LocalDate startDate, LocalDate endDate, TypeConge type,
+                        String reason, Status status, Decision secretaireDecision,
+                        Decision rhDecision, Decision adminDecision, LocalDate dateDemande) {
         this.id = id;
         this.worker = worker;
         this.startDate = startDate;
@@ -29,7 +32,9 @@ public class DemandeConge {
         this.secretaireDecision = secretaireDecision;
         this.rhDecision = rhDecision;
         this.adminDecision = adminDecision;
+        this.dateDemande = dateDemande;
     }
+
 
     public int getId() {
         return id;
@@ -61,6 +66,14 @@ public class DemandeConge {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public LocalDate getDateDemande() {
+        return dateDemande;
+    }
+
+    public void setDateDemande(LocalDate dateDemande) {
+        this.dateDemande = dateDemande;
     }
 
     public TypeConge getType() {
@@ -110,4 +123,16 @@ public class DemandeConge {
     public void setAdminDecision(Decision adminDecision) {
         this.adminDecision = adminDecision;
     }
+
+
+    public String getCurrentStage() {
+        switch (status) {
+            case EN_ATTENTE_SECRETAIRE, REFUSE_SECRETAIRE : return "SECRETAIRE";
+            case EN_ATTENTE_RH, REFUSE_RH : return "RH";
+            case EN_ATTENTE_ADMIN, REFUSE_ADMIN : return "ADMIN";
+            case ACCEPTE : return "TERMINE";
+            default : return "INCONNU";
+        }
+    }
+
 }

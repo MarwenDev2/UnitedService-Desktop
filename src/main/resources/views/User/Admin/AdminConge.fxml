@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.test.Controllers.User.Admin.AdminCongeManagementController"
+            stylesheets="@admin-conge.css">
+
+    <top>
+        <VBox spacing="10" style="-fx-padding: 20 30 10 30;">
+            <Label fx:id="dashboardTitle" text="🗂️ Gestion des demandes de congés" styleClass="title-label" />
+            <Label fx:id="welcomeLabel" styleClass="subtitle-label" />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 10 30 30 30;">
+
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <Label fx:id="pendingLabel" styleClass="stat-label" text="⏳ En attente:" />
+                <Label fx:id="acceptedLabel" styleClass="stat-label" text="✅ Acceptées:" />
+                <Label fx:id="refusedLabel" styleClass="stat-label" text="❌ Refusées:" />
+            </HBox>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="🔎 Statut :" styleClass="form-label"/>
+                <ComboBox fx:id="statusFilterCombo" prefWidth="150" />
+                <Label text="📍 Étape actuelle :" styleClass="form-label"/>
+                <ComboBox fx:id="stageFilterCombo" prefWidth="150" />
+            </HBox>
+
+            <TableView fx:id="table" prefHeight="500">
+                <columns>
+                    <TableColumn fx:id="workerNameCol" text="👤 Demandeur" prefWidth="180" />
+                    <TableColumn fx:id="dateCol" text="🗓️ Date de demande" prefWidth="150" />
+                    <TableColumn fx:id="motifCol" text="📝 Motif" prefWidth="280" />
+                    <TableColumn fx:id="statusCol" text="🚦 Statut" prefWidth="120" />
+                    <TableColumn fx:id="actionsCol" text="🛠 Actions" prefWidth="100" />
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+</BorderPane>

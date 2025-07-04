@@ -10,7 +10,7 @@
             fx:controller="tn.test.Controllers.Worker.PostulerCongeController">
 
     <center>
-        <VBox spacing="30" alignment="TOP_CENTER" styleClass="main-container">
+        <VBox fx:id="mainContainer" spacing="30" alignment="TOP_CENTER" styleClass="main-container">
 
             <Label text="Demande de Congé" styleClass="page-title" />
 

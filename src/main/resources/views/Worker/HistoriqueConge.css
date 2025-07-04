@@ -1,52 +1,63 @@
+/* 🧱 Container layout */
 .hbox {
-    -fx-background-color: #F1F8E9;
+    -fx-background-color: #fffdf4;
     -fx-padding: 10;
 }
+
+/* 🏷️ Page title */
 .title-label {
-    -fx-font-size: 24px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2E7D32;
+    -fx-text-fill: #C6A34F;
+    -fx-effect: dropshadow(gaussian, #00000033, 4, 0.3, 0, 1);
 }
 
+/* 🧭 ScrollPane styling */
 .scroll-pane {
     -fx-background: transparent;
-    -fx-border: none;
+    -fx-border-color: transparent;
 }
 
+/* 💳 Card container */
 #cardContainer {
-    -fx-background-color: #F7FFF7;
+    -fx-background-color: #fefaf1;
 }
 
+/* 🪪 Individual card style */
 .card {
-    -fx-background-color: #FFF;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 12;
     -fx-border-radius: 12;
-    -fx-border-color: #C8E6C9;
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);
+    -fx-border-color: #C6A34F33;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 8, 0.1, 0, 2);
     -fx-min-width: 240;
     -fx-max-width: 240;
     -fx-padding: 16;
-    -fx-spacing: 8;
-    -fx-transition: all 0.2s ease;
+    -fx-spacing: 10;
+    -fx-transition: all 0.2s ease-in-out;
 }
 
 .card:hover {
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
+    -fx-border-color: #FFD700;
 }
 
+/* 📝 Card title */
 .card-title {
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-text-fill: #388E3C;
+    -fx-text-fill: #000000;
 }
 
+/* 🏷️ Sub-labels inside cards */
 .card-label {
     -fx-font-size: 13px;
-    -fx-text-fill: #555;
+    -fx-text-fill: #444;
 }
 
+/* 🟢 Status label shared */
 .status-label {
     -fx-font-size: 13px;
     -fx-font-weight: bold;
@@ -55,12 +66,18 @@
     -fx-text-fill: white;
 }
 
+/* 🟩 Statuses */
 .status-ACCEPTE {
-    -fx-background-color: #43A047;
+    -fx-background-color: #C6A34F; /* Golden */
 }
-.status-REFUSE*, .status-REFUSE_ADMIN {
-    -fx-background-color: #E53935;
+
+/* 🟥 Rejected */
+.status-REFUSE,
+.status-REFUSE_ADMIN {
+    -fx-background-color: #C0392B;
 }
-.status-EN_ATTENTE* {
-    -fx-background-color: #FB8C00;
+
+/* 🟧 Pending */
+.status-EN_ATTENTE {
+    -fx-background-color: #E67E22;
 }

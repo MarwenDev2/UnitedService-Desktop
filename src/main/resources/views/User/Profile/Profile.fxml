@@ -78,19 +78,6 @@
                     </GridPane>
                 </VBox>
 
-                <!-- Action Buttons -->
-                <HBox style="-fx-spacing: 15px; -fx-alignment: CENTER; -fx-padding: 20px; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-                    <Button text="Edit Profile" onAction="#handleEditProfile" style="-fx-background-color: #2196F3; -fx-text-fill: white;">
-                        <graphic>
-                            <ImageView fitHeight="16" fitWidth="16">
-                                <image>
-                                    <Image url="@/Images/icons/edit.gif" />
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-                    <Button text="Change Password" onAction="#handleChangePassword" style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
-                </HBox>
             </VBox>
         </ScrollPane>
     </center>

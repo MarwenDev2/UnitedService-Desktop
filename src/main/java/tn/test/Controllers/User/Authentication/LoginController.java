@@ -89,9 +89,13 @@ public class LoginController {
         }
 
         User user = userService.login(email, password);
+        if (user == null) {
+            showError("Email ou mot de passe incorrect.");
+            return;
+        }
         if (user != null) {
             try {
-                proceedWithLogin(user);
+                proceedWithLoginUser(user);
             } catch (IOException e) {
                 showError("Erreur lors du chargement de la page suivante.");
                 e.printStackTrace();
@@ -112,6 +116,13 @@ public class LoginController {
         }
 
         Worker worker = workerService.findByCin(cin);
+
+        if (worker == null) {
+            cinError.setText("CIN non reconnu");
+            cinError.setVisible(true);
+            return;
+        }
+
         if (worker != null) {
             try {
                 SessionManager.getInstance().createSession(worker);
@@ -177,11 +188,11 @@ public class LoginController {
     }
 
 
-    private void proceedWithLogin(User user) throws IOException {
+    private void proceedWithLoginUser(User user) throws IOException {
         SessionManager.getInstance().createSession(user);
         String fxmlPath = "/fxml/main_layout.fxml";
         Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, 1300, 800);
         scene.getStylesheets().addAll(
                 getClass().getResource("/styles/main.css").toExternalForm(),
                 getClass().getResource("/styles/dashboard.css").toExternalForm(),

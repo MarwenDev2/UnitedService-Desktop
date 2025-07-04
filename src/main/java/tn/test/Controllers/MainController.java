@@ -51,7 +51,7 @@ public class MainController {
     }
     private void loadInitialPage() {
         setNavTitle("🏠 Dashboard");
-        loadPage("/fxml/dashboard.fxml");
+        loadPage("/views/Worker/WorkerDashboard.fxml");
         setActive(btnDashboard);
     }
 
@@ -130,13 +130,13 @@ public class MainController {
 
     @FXML private void goToDashboard() {
         setNavTitle("🏠 Dashboard");
-        loadPage("/fxml/dashboard.fxml");
+        loadPage("/views/Worker/WorkerDashboard.fxml");
         setActive(btnDashboard);
     }
 
     @FXML private void goToDemandes() {
         setNavTitle("📋 Blog");
-        loadPage("/views/Worker/WorkerDashboard.fxml");
+        loadPage("/views/User/Admin/AdminConge.fxml");
         setActive(btnBlog);
     }
 
