@@ -17,7 +17,7 @@ public class WorkerService implements CrudService<Worker> {
     }
 
     @Override
-    public void add(Worker worker) {
+    public boolean add(Worker worker) {
         String sql = "INSERT INTO worker (name, cin, department, position, phone, email, salary, profile_image_path, gender, date_of_birth, address, creation_date, status, total_conge_days, used_conge_days) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -38,12 +38,15 @@ public class WorkerService implements CrudService<Worker> {
             stmt.setInt(14, worker.getTotalCongeDays());
             stmt.setInt(15, worker.getUsedCongeDays());
 
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
             System.out.println("✅ Worker added successfully.");
+            return rows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Error adding worker: " + e.getMessage());
+            return false;
         }
     }
+
 
 
     @Override

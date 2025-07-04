@@ -11,8 +11,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import tn.test.entities.User;
-import tn.test.services.UserService;
+import tn.test.entities.Worker;
+import tn.test.services.WorkerService;
+import tn.test.tools.SessionManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,28 +25,22 @@ public class FrontViewController implements Initializable {
     @FXML private ImageView logoImage, menuAvatar;
     @FXML private Label profileNameLabel, activePageLabel, roleLabel;
     @FXML private StackPane contentPane;
-    @FXML private Button accueilButton,blogButton, btnFavoris;
+    @FXML private Button accueilButton, btnFavoris, demandeCongeButton, historiqueButton;
 
     @FXML private MenuButton profileMenu;
 
     private Button currentActiveButton;
-    private final UserService serviceUser = new UserService();
-    private User currentUser;
+    private final WorkerService serviceWorker = new WorkerService();
+    private Worker currentWorker = SessionManager.getInstance().getCurrentWorker();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        logoImage.setImage(loadImage("photos/logo.png"));
+        logoImage.setImage(loadImage("Images/logo.png"));
         menuAvatar.setImage(loadImage("photos/avatar.jpg"));
+        profileNameLabel.setText(currentWorker.getName());
+        roleLabel.setText(currentWorker.getPosition());
         setupClip(menuAvatar);
-    }
-
-    public void setCurrentUser(User user) {
-        this.currentUser = serviceUser.findById(user.getId());
-        if (this.currentUser == null) this.currentUser = user;
-        if (this.currentUser.getRole() == null) this.currentUser.setRole(user.getRole());
-
-        profileNameLabel.setText(currentUser.getName());
-        roleLabel.setText("Connecté en tant que: " + currentUser.getRole());
+        loadInitialPage();
     }
 
     private void loadView(String fxmlPath) {
@@ -90,10 +85,10 @@ public class FrontViewController implements Initializable {
 
     // ------------------- NAVIGATION -------------------
 
-    @FXML private void goToAccueil() {
+    private void loadInitialPage() {
+        activePageLabel.setText("Page d'utilisateur");
+        loadView("/views/Worker/WorkerHome.fxml");
         setActiveButton(accueilButton);
-        activePageLabel.setText("Accueil");
-        loadView("AccueilView.fxml");
     }
 
     @FXML public void goToFavoris() {
@@ -102,10 +97,22 @@ public class FrontViewController implements Initializable {
         loadView("/front/produit/FavorisView.fxml");
     }
 
-    @FXML private void goToBlog() {
-        setActiveButton(blogButton);
-        activePageLabel.setText("Blog");
-        loadView1("/Views/Blog/ShowWorkers.fxml");
+    @FXML public void goToAccueil() {
+        setActiveButton(accueilButton);
+        activePageLabel.setText("Tableau de bord");
+        loadView("/views/Worker/WorkerHome.fxml");
+    }
+
+    @FXML public void goToDemandeConge() {
+        setActiveButton(demandeCongeButton);
+        activePageLabel.setText("Demander un congé");
+        loadView("/views/Worker/PostulerConge.fxml");
+    }
+
+    @FXML public void goToHistorique() {
+        setActiveButton(historiqueButton);
+        activePageLabel.setText("Historique des congés");
+        loadView("/views/Worker/HistoriqueConge.fxml");
     }
 
     private void loadView1(String fxmlPath) {

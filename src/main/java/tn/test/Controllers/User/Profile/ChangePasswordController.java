@@ -63,7 +63,7 @@ public class ChangePasswordController {
         userService.update(currentUser);
 
         // Update session
-        SessionManager.getInstance().updateCurrentUser(currentUser);
+        SessionManager.getInstance().updateCurrent(currentUser);
 
         // Show success and close
         showAlert("Success", "Password changed successfully", Alert.AlertType.INFORMATION);

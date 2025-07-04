@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="rootPane" prefHeight="700.0" prefWidth="1000.0"
+            stylesheets="@PostulerConge.css"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.test.Controllers.Worker.PostulerCongeController">
+
+    <center>
+        <VBox spacing="30" alignment="TOP_CENTER" styleClass="main-container">
+
+            <Label text="Demande de Congé" styleClass="page-title" />
+
+            <GridPane hgap="20" vgap="18" styleClass="form-grid">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <Label text="Type de congé:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="typeComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Date de début:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="startDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Date de fin:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="endDatePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Motif:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextArea fx:id="reasonField" prefRowCount="3" wrapText="true"
+                          GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="submitButton" text="Envoyer la demande" styleClass="primary-button"/>
+                <Button text="Annuler" onAction="#cancel" styleClass="secondary-button"/>
+            </HBox>
+
+            <Label fx:id="errorLabel" text="" styleClass="feedback-label"/>
+        </VBox>
+    </center>
+
+</BorderPane>

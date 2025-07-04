@@ -20,7 +20,7 @@ public class NotificationService implements CrudService<Notification> {
     }
 
     @Override
-    public void add(Notification notification) {
+    public boolean add(Notification notification) {
         String sql = "INSERT INTO notification (recipient_id, message, timestamp, is_read) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -29,12 +29,15 @@ public class NotificationService implements CrudService<Notification> {
             stmt.setTimestamp(3, Timestamp.valueOf(notification.getTimestamp()));
             stmt.setBoolean(4, notification.isRead());
 
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
             System.out.println("✅ Notification added.");
+            return rows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Error adding notification: " + e.getMessage());
+            return false;
         }
     }
+
 
     @Override
     public void update(Notification notification) {

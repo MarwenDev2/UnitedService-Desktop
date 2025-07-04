@@ -1,102 +1,137 @@
 .root {
-    -fx-font-family: 'Segoe UI', sans-serif;
-    -fx-background-color: linear-gradient(to right, #e0f2f1, #ffffff);
+    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #002244 0%, #004466 100%);
 }
-
-.left-pane {
-    -fx-background-color: linear-gradient(to bottom right, #43cea2, #185a9d);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0.5, 0, 0);
-}
-
-.login-card {
-    -fx-background-color: white;
-    -fx-padding: 40 30;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-background-color: rgba(255, 255, 255, 0.95);
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 15, 0.3, 0, 4);
-    -fx-spacing: 15;
+.center-pane {
+    -fx-padding: 60 20;
     -fx-alignment: center;
-    -fx-opacity: 0;
-    -fx-translate-y: 30;
+    -fx-rotate: 0;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-transform-origin: center center;
+}
+
+
+.login-container {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 20, 0.3, 0, 5);
+    -fx-alignment: center;
+    -fx-padding: 40 35;
+    -fx-max-width: 450px;
+    -fx-pref-width: 100%;
+    -fx-backface-visibility: hidden;
+    -fx-smooth: true;
+}
+
+.login-container:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 188, 212, 0.4), 30, 0.4, 0, 8);
+}
+
+
+/* Logo styling with enhanced effects */
+.logo {
+    -fx-effect:
+            dropshadow(gaussian, rgba(204, 164, 94, 0.8), 15, 0.2, 0, 3),
+            innershadow(gaussian, rgba(255, 255, 255, 0.3), 5, 0.5, 0, 1);
+    -fx-transition: all 0.3s ease;
+    -fx-padding: 10px;
+    -fx-background-color: transparent;
+    -fx-border-radius: 8px;
+}
+
+.logo:hover {
+    -fx-effect:
+            dropshadow(gaussian, rgba(204, 164, 94, 0.9), 20, 0.3, 0, 5),
+            innershadow(gaussian, rgba(255, 255, 255, 0.4), 8, 0.7, 0, 2);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+/* Add this to your existing .login-container */
+.login-container {
+    -fx-spacing: 25; /* Increased spacing between elements */
 }
 
 .title {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2e7d32;
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #003366;
 }
 
 .input-field {
-    -fx-pref-width: 250;
-    -fx-padding: 10;
-    -fx-background-color: #f1f8e9;
+    -fx-pref-width: 100%;  /* take full width of container */
+    -fx-padding: 14 16;
+    -fx-background-color: #e0f7fa;
     -fx-border-color: transparent;
-    -fx-border-width: 1;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-font-size: 14px;
-    -fx-text-fill: #33691E;
-    -fx-prompt-text-fill: #9e9e9e;
-    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.05), 3, 0.0, 0, 1);
-}
-
-.input-field:focused {
-    -fx-border-color: #689F38;
-    -fx-background-color: #ffffff;
-    -fx-effect: dropshadow(gaussian, #aed581, 4, 0.2, 0, 0);
-}
-
-.green-button {
-    -fx-background-color: linear-gradient(to right, #7cb342, #558b2f);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
     -fx-background-radius: 12;
-    -fx-padding: 10 25;
-    -fx-cursor: hand;
-    -fx-font-size: 13px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 128, 0, 0.4), 6, 0.2, 0, 2);
+    -fx-border-radius: 12;
+    -fx-font-size: 14;
+    -fx-text-fill: #003344;
+    -fx-prompt-text-fill: #006a75;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.05), 3, 0.0, 0, 1);
     -fx-transition: all 0.3s ease-in-out;
 }
 
-.green-button:hover {
-    -fx-background-color: linear-gradient(to right, #9ccc65, #7cb342);
+.input-field:focused {
+    -fx-border-color: #00bcd4;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, #00bcd4, 5, 0.3, 0, 0);
 }
-
-.google-button {
-    -fx-background-color: #E53935;
+/* Primary button with golden gradient */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #cca45e, #a7853e);
     -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 12;
-    -fx-padding: 10 25;
+    -fx-font-weight: 700;
+    -fx-background-radius: 18;
+    -fx-padding: 14 0;
+    -fx-font-size: 16;
     -fx-cursor: hand;
-    -fx-font-size: 13px;
-    -fx-effect: dropshadow(gaussian, rgba(244, 67, 54, 0.4), 6, 0.2, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(204, 164, 94, 0.7), 12, 0.3, 0, 3);
+    -fx-transition: all 0.25s ease;
+    -fx-min-width: 200px; /* Added minimum width */
+    -fx-pref-width: 380px; /* Added preferred width */
+    -fx-max-width: 380px; /* Added maximum width */
+    -fx-min-height: 50px; /* Ensures minimum height */
 }
 
-.google-button:hover {
-    -fx-background-color: #f44336;
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #e1c969, #8d732a);
+    -fx-effect: dropshadow(gaussian, rgba(204, 164, 94, 0.85), 16, 0.4, 0, 5);
+}
+.btn-primary:pressed {
+    -fx-background-color: linear-gradient(to right, #b38a4c, #7a5d2c);
+    -fx-effect: dropshadow(gaussian, rgba(204, 164, 94, 0.9), 20, 0.5, 0, 6);
 }
 
-.forgot-password {
+.text-muted {
+    -fx-text-fill: #607d8b;
+    -fx-font-size: 13;
+}
+
+.link-primary {
+    -fx-text-fill: #00bcd4;
+    -fx-font-weight: 700;
+    -fx-underline: false;
+}
+
+.link-primary:hover {
+    -fx-underline: true;
+    -fx-text-fill: #0097a7;
+}
+
+.error-label {
     -fx-text-fill: #e53935;
-    -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 0 0 10 0;
-}
-.hyperlink:hover {
-    -fx-text-fill: #558b2f;
-    -fx-underline: true;
-}
-
-.error-label {
-    -fx-text-fill: #e74c3c;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 10px 0;
     -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.4), 6, 0, 0, 1);
 }
 
-.error-label {
-    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.3), 5, 0, 0, 1);
+.field-error {
+    -fx-text-fill: #d32f2f;
+    -fx-font-size: 11;
+    -fx-padding: 0 0 8 4;
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="borderPane" prefHeight="683.0"
+            stylesheets="@WorkerFront.css" prefWidth="967.0"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.test.Controllers.Worker.WorkerHomeController">
+    <!-- Center Content -->
+    <center>
+        <VBox fx:id="mainContent" prefWidth="800" prefHeight="600"
+              spacing="20" alignment="TOP_CENTER" style="-fx-padding: 40; -fx-background-color: #F7FFF7;">
+
+            <Label fx:id="welcomeLabel" styleClass="welcomeLabel" text="Bienvenue, Ahmed!" style="-fx-font-size: 24px; -fx-text-fill: #F2C14E;" />
+
+            <HBox spacing="40" alignment="CENTER">
+                <VBox spacing="10" alignment="CENTER" styleClass="info-box">
+                    <Label text="Total Congé" styleClass="info-title" />
+                    <Label fx:id="totalDaysLabel" styleClass="info-value" />
+                </VBox>
+                <VBox spacing="10" alignment="CENTER" styleClass="info-box">
+                    <Label text="Congé utilisé" styleClass="info-title" />
+                    <Label fx:id="usedDaysLabel" styleClass="info-value" />
+                </VBox>
+                <VBox spacing="10" alignment="CENTER" styleClass="info-box">
+                    <Label text="Congé restant" styleClass="info-title" />
+                    <Label fx:id="remainingDaysLabel" styleClass="info-value" />
+                </VBox>
+            </HBox>
+
+            <Label text="Mes dernières demandes de congé" style="-fx-font-size: 18px; -fx-text-fill: #444;" />
+
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" vbarPolicy="NEVER" maxHeight="300">
+                <HBox fx:id="cardContainer" spacing="15" style="-fx-padding: 10;" />
+            </ScrollPane>
+
+        </VBox>
+
+    </center>
+</BorderPane>

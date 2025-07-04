@@ -1,6 +1,8 @@
 package tn.test.tools;
 
 import tn.test.entities.User;
+import tn.test.entities.Worker;
+
 import java.security.SecureRandom;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -8,7 +10,8 @@ import java.util.Map;
 
 public class SessionManager {
     private static SessionManager instance;
-    private static Map<String, User> activeSessions = new HashMap<>();
+
+    private static final Map<String, Object> activeSessions = new HashMap<>();
     private String currentSessionId;
 
     private SessionManager() {}
@@ -20,14 +23,24 @@ public class SessionManager {
         return instance;
     }
 
-    public void createSession(User user) {
+    public void createSession(Object userOrWorker) {
         String sessionId = generateSessionId();
-        activeSessions.put(sessionId, user);
+        activeSessions.put(sessionId, userOrWorker);
         this.currentSessionId = sessionId;
     }
 
-    public User getCurrentUser() {
+    public Object getCurrent() {
         return activeSessions.get(currentSessionId);
+    }
+
+    public User getCurrentUser() {
+        Object obj = getCurrent();
+        return obj instanceof User ? (User) obj : null;
+    }
+
+    public Worker getCurrentWorker() {
+        Object obj = getCurrent();
+        return obj instanceof Worker ? (Worker) obj : null;
     }
 
     public void invalidateCurrentSession() {
@@ -44,10 +57,17 @@ public class SessionManager {
         return new BigInteger(1, token).toString(16);
     }
 
-    // Add this method to update user info in session
-    public void updateCurrentUser(User updatedUser) {
+    public void updateCurrent(Object updated) {
         if (currentSessionId != null) {
-            activeSessions.put(currentSessionId, updatedUser);
+            activeSessions.put(currentSessionId, updated);
         }
+    }
+
+    public boolean isUserSession() {
+        return getCurrent() instanceof User;
+    }
+
+    public boolean isWorkerSession() {
+        return getCurrent() instanceof Worker;
     }
 }

@@ -1,76 +1,78 @@
 package tn.test.Controllers.User.Authentication;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
 import tn.test.entities.User;
+import tn.test.entities.Worker;
 import tn.test.services.UserService;
-import tn.test.tools.EmailService;
+import tn.test.services.WorkerService;
 import tn.test.tools.SessionManager;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class LoginController {
 
-    @FXML private VBox loginCard;
-    @FXML private Hyperlink signup;
+    @FXML private StackPane centerPane;
+    @FXML private VBox loginContainer;
+    @FXML private VBox workerContainer;
+    @FXML private Hyperlink worker;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
+    @FXML private TextField cinField;
     @FXML private Button loginButton;
+    @FXML private Button cinLoginButton;
     @FXML private Label errorLabel;
     @FXML private Label emailError;
     @FXML private Label passwordError;
+    @FXML private Label cinError;
+    @FXML private Hyperlink userBack;
+
+
     private final UserService userService = new UserService();
-    private EmailService emailService;
-    private static final String REDIRECT_URI = "http://localhost:8000/login/google/callback";
+    private WorkerService workerService = new WorkerService();
 
     @FXML
     public void initialize() {
-        if (errorLabel != null) {
-            errorLabel.setVisible(false);
-        }
-
-        // Animations
+        errorLabel.setVisible(false);
+        cinError.setVisible(false);
+        loginContainer.setOpacity(0);
+        loginContainer.setTranslateY(30);
+        workerContainer.setVisible(false);
+        workerContainer.setManaged(false);
         setupAnimations();
 
-        // Login button action
         loginButton.setOnAction(event -> handleLogin());
+        cinLoginButton.setOnAction(event -> handleCinLogin());
+        worker.setOnMouseClicked(event -> flipToWorker());
+        userBack.setOnMouseClicked(event -> flipToUser());
 
-        // Signup link action
-        signup.setOnMouseClicked(event -> loadScene("/views/User/Authentication/SignUp.fxml"));
     }
+
     private void setupAnimations() {
-        FadeTransition fade = new FadeTransition(Duration.millis(800), loginCard);
-        fade.setFromValue(0);
-        fade.setToValue(1);
+        FadeTransition ft = new FadeTransition(Duration.seconds(0.7), loginContainer);
+        ft.setFromValue(0);
+        ft.setToValue(1);
 
-        TranslateTransition slide = new TranslateTransition(Duration.millis(800), loginCard);
-        slide.setFromY(30);
-        slide.setToY(0);
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.7), loginContainer);
+        tt.setFromY(30);
+        tt.setToY(0);
 
-        fade.play();
-        slide.play();
-    }
-    private void clearErrors() {
-        emailError.setVisible(false);
-        passwordError.setVisible(false);
+        new ParallelTransition(ft, tt).play();
     }
 
     private void handleLogin() {
-        clearErrors();
+        emailError.setVisible(false);
+        passwordError.setVisible(false);
         String email = emailField.getText().trim();
         String password = passwordField.getText();
 
@@ -85,77 +87,133 @@ public class LoginController {
             passwordError.setVisible(true);
             return;
         }
+
+        User user = userService.login(email, password);
+        if (user != null) {
+            try {
+                proceedWithLogin(user);
+            } catch (IOException e) {
+                showError("Erreur lors du chargement de la page suivante.");
+                e.printStackTrace();
+            }
+        } else {
+            showError("Email ou mot de passe incorrect.");
+        }
     }
+
+    private void handleCinLogin() {
+        cinError.setVisible(false);
+        String cin = cinField.getText().trim();
+
+        if (cin.isEmpty()) {
+            cinError.setText("Veuillez entrer votre CIN");
+            cinError.setVisible(true);
+            return;
+        }
+
+        Worker worker = workerService.findByCin(cin);
+        if (worker != null) {
+            try {
+                SessionManager.getInstance().createSession(worker);
+                proceedWithLoginWorker(worker);
+            } catch (IOException e) {
+                showError("Erreur lors du chargement de la page.");
+                e.printStackTrace();
+            }
+        } else {
+            showError("CIN incorrect ou non reconnu.");
+        }
+    }
+
+
+    private void flipToWorker() {
+        PerspectiveCamera camera = new PerspectiveCamera();
+        centerPane.getScene().setCamera(camera);
+
+        RotateTransition rotateOut = new RotateTransition(Duration.millis(600), centerPane);
+        rotateOut.setFromAngle(0);
+        rotateOut.setToAngle(90);
+        rotateOut.setAxis(Rotate.Y_AXIS);
+
+        rotateOut.setOnFinished(event -> {
+            loginContainer.setVisible(false);
+            loginContainer.setManaged(false);
+            workerContainer.setVisible(true);
+            workerContainer.setManaged(true);
+
+            RotateTransition rotateIn = new RotateTransition(Duration.millis(600), centerPane);
+            rotateIn.setFromAngle(-90);
+            rotateIn.setToAngle(0);
+            rotateIn.setAxis(Rotate.Y_AXIS);
+            rotateIn.play();
+        });
+
+        rotateOut.play();
+    }
+
+    private void flipToUser() {
+        PerspectiveCamera camera = new PerspectiveCamera();
+        centerPane.getScene().setCamera(camera);
+
+        RotateTransition rotateOut = new RotateTransition(Duration.millis(600), centerPane);
+        rotateOut.setFromAngle(0);
+        rotateOut.setToAngle(-90);
+        rotateOut.setAxis(Rotate.Y_AXIS);
+
+        rotateOut.setOnFinished(event -> {
+            workerContainer.setVisible(false);
+            workerContainer.setManaged(false);
+            loginContainer.setVisible(true);
+            loginContainer.setManaged(true);
+
+            RotateTransition rotateIn = new RotateTransition(Duration.millis(600), centerPane);
+            rotateIn.setFromAngle(90);
+            rotateIn.setToAngle(0);
+            rotateIn.setAxis(Rotate.Y_AXIS);
+            rotateIn.play();
+        });
+
+        rotateOut.play();
+    }
+
+
     private void proceedWithLogin(User user) throws IOException {
-        SessionManager sessionManager = SessionManager.getInstance();
-        sessionManager.createSession(user);
+        SessionManager.getInstance().createSession(user);
+        String fxmlPath = "/fxml/main_layout.fxml";
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/styles/main.css").toExternalForm(),
+                getClass().getResource("/styles/dashboard.css").toExternalForm(),
+                getClass().getResource("/styles/popup.css").toExternalForm(),
+                getClass().getResource("/styles/sidebar.css").toExternalForm()
+        );
 
-        if (errorLabel != null) {
-            errorLabel.setVisible(false);
-        }
-
-        if ("ROLE_ADMIN".equalsIgnoreCase(user.getRole().toString())) {
-            loadScene("/fxml/main_layout.fxml");
-        } else {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/front/frontview.fxml"));
-            Parent root = loader.load();
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().addAll(
-                    getClass().getResource("/styles/main.css").toExternalForm(),
-                    getClass().getResource("/styles/dashboard.css").toExternalForm(),
-                    getClass().getResource("/styles/offre.css").toExternalForm(),
-                    getClass().getResource("/styles/popup.css").toExternalForm(),
-                    getClass().getResource("/styles/sidebar.css").toExternalForm(),
-                    getClass().getResource("/styles/job-cards.css").toExternalForm(),
-                    getClass().getResource("/styles/offre_card.css").toExternalForm(),
-                    getClass().getResource("/styles/candidatures.css").toExternalForm(),
-                    getClass().getResource("/styles/add_offre_dialog.css").toExternalForm(),
-                    getClass().getResource("/styles/edit_offre_dialog.css").toExternalForm()
-            );
-
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        }
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
+
+    private void proceedWithLoginWorker(Worker worker) throws IOException {
+        SessionManager.getInstance().createSession(worker);
+        String fxmlPath = "/front/frontview.fxml";
+        Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/styles/main.css").toExternalForm(),
+                getClass().getResource("/styles/dashboard.css").toExternalForm(),
+                getClass().getResource("/styles/popup.css").toExternalForm(),
+                getClass().getResource("/styles/sidebar.css").toExternalForm()
+        );
+
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
     private void showError(String message) {
-        if (errorLabel != null) {
-            errorLabel.setText(message);
-            errorLabel.setVisible(true);
-
-            TranslateTransition shake = new TranslateTransition(Duration.millis(100), errorLabel);
-            shake.setFromX(0);
-            shake.setByX(10);
-            shake.setCycleCount(6);
-            shake.setAutoReverse(true);
-            shake.play();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        }
-    }
-
-    private void showAlert(String title, String message, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void loadScene(String fxmlPath) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root, 950, 800));
-            stage.show();
-        } catch (IOException e) {
-            showError("Erreur lors du chargement de la page");
-            e.printStackTrace();
-        }
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
     }
 }

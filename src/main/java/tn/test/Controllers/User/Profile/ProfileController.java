@@ -43,7 +43,7 @@ public class ProfileController {
     private void loadUserData() {
         // Refresh user data from database
         currentUser = userService.findById(currentUser.getId());
-        SessionManager.getInstance().updateCurrentUser(currentUser);
+        SessionManager.getInstance().updateCurrent(currentUser);
 
         // Basic info
         fullNameLabel.setText(currentUser.getName());
@@ -125,7 +125,7 @@ public class ProfileController {
     private void loadDashboard() { loadScene("/views/User/Admin/Dashboard.fxml"); }
 
     @FXML
-    private void loadPosts() { loadScene("/views/Worker/ShowWorkers.fxml"); }
+    private void loadPosts() { loadScene("/views/Worker/WorkerDashboard.fxml"); }
 
     @FXML
     private void handleLogout() {

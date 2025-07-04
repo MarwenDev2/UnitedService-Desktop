@@ -1,0 +1,66 @@
+.hbox {
+    -fx-background-color: #F1F8E9;
+    -fx-padding: 10;
+}
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+}
+
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-border: none;
+}
+
+#cardContainer {
+    -fx-background-color: #F7FFF7;
+}
+
+.card {
+    -fx-background-color: #FFF;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #C8E6C9;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);
+    -fx-min-width: 240;
+    -fx-max-width: 240;
+    -fx-padding: 16;
+    -fx-spacing: 8;
+    -fx-transition: all 0.2s ease;
+}
+
+.card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #388E3C;
+}
+
+.card-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555;
+}
+
+.status-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 4 8;
+    -fx-text-fill: white;
+}
+
+.status-ACCEPTE {
+    -fx-background-color: #43A047;
+}
+.status-REFUSE*, .status-REFUSE_ADMIN {
+    -fx-background-color: #E53935;
+}
+.status-EN_ATTENTE* {
+    -fx-background-color: #FB8C00;
+}

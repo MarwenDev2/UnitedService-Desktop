@@ -28,10 +28,8 @@ public class AccueilController implements Initializable {
     @FXML private ImageView tomatesImage;
     @FXML private ImageView pommesImage;
     @FXML private ImageView stockImage;
-
     @FXML private GridPane widgetGrid;
     @FXML private Button btnAddWidget;
-
     @FXML private VBox produitsWidget;
     @FXML private VBox offresWidget;
     @FXML private VBox blogWidget;

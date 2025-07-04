@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane fx:id="borderPane" prefHeight="683.0"
+            stylesheets="@HistoriqueConge.css" prefWidth="967.0"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.test.Controllers.Worker.HistoriqueCongeController">
+    <!-- Center Content -->
+    <center>
+
+        <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 20;">
+            <Label text="Historique des Congés" styleClass="title-label" />
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER">
+                <HBox fx:id="cardContainer" spacing="16" style="-fx-padding: 20;" />
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

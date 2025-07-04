@@ -15,10 +15,10 @@ public class DashboardApp extends Application {
 
             Parent root = FXMLLoader.load(getClass().getResource("/views/User/Authentication/Login.fxml"));
 
-            Scene scene = new Scene(root, 900, 600);
+            Scene scene = new Scene(root, 1300, 800);
+            scene.getStylesheets().add(getClass().getResource("/views/User/Authentication/loginstyle.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/styles/offre.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
             stage.setTitle("United Service");
             Image icon = new Image(getClass().getResourceAsStream("/Images/logo.png"));

@@ -20,7 +20,7 @@ public class UserService implements CrudService<User> {
     }
 
     @Override
-    public void add(User user) {
+    public boolean add(User user) {
         String sql = "INSERT INTO user (name, email, password, role, phone, profile_image_path, gender, date_of_birth, address) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -35,10 +35,12 @@ public class UserService implements CrudService<User> {
             stmt.setDate(8, Date.valueOf(user.getDateOfBirth()));
             stmt.setString(9, user.getAddress());
 
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
             System.out.println("✅ User added successfully.");
+            return rows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Error adding user: " + e.getMessage());
+            return false;
         }
     }
 
@@ -80,6 +82,21 @@ public class UserService implements CrudService<User> {
 
     @Override
     public User findById(int id) {
+        String sql = "SELECT * FROM user WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return extractUser(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User findByCIN(int id) {
         String sql = "SELECT * FROM user WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);

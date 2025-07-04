@@ -10,6 +10,30 @@
     -fx-dark-gray: #333333;
     -fx-danger-red: #E53935;
 }
+
+.dashboard-card {
+    -fx-background-color: white;
+    -fx-padding: 15;
+    -fx-border-color: #c8e6c9;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0.3, 0, 2);
+    -fx-min-width: 160;
+}
+
+.card-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+.card-count {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+}
+
+
 /* ========== SIDEBAR STYLING ========== */
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, #2E8B57, #1F6B4A);

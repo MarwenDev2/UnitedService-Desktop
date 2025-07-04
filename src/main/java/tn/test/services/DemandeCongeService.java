@@ -21,11 +21,11 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
     }
 
     @Override
-    public void add(DemandeConge demande) {
+    public boolean add(DemandeConge demande) {
         String sql = """
-            INSERT INTO demande_conge (worker_id, start_date, end_date, type, reason, status, secretaire_decision_id, rh_decision_id, admin_decision_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """;
+        INSERT INTO demande_conge (worker_id, start_date, end_date, type, reason, status, secretaire_decision_id, rh_decision_id, admin_decision_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, demande.getWorker().getId());
@@ -39,12 +39,15 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             stmt.setObject(8, demande.getRhDecision() != null ? demande.getRhDecision().getId() : null, Types.INTEGER);
             stmt.setObject(9, demande.getAdminDecision() != null ? demande.getAdminDecision().getId() : null, Types.INTEGER);
 
-            stmt.executeUpdate();
+            int rowsInserted = stmt.executeUpdate();
             System.out.println("✅ DemandeConge added.");
+            return rowsInserted > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Error adding DemandeConge: " + e.getMessage());
+            return false;
         }
     }
+
 
     @Override
     public void update(DemandeConge demande) {
@@ -213,15 +216,70 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         return list;
     }
 
+    public int countByStatus(int workerId, String status) {
+        String sql = "SELECT COUNT(*) FROM demande_conge WHERE worker_id = ? AND status = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, workerId);
+            stmt.setString(2, status);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public List<DemandeConge> getRecentCongeByUser(int workerId, int limit) {
+        List<DemandeConge> list = new ArrayList<>();
+        String sql = "SELECT * FROM demande_conge WHERE worker_id = ? ORDER BY start_date DESC LIMIT ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, workerId);
+            stmt.setInt(2, limit);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractDemande(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
     private DemandeConge extractDemande(ResultSet rs) throws SQLException {
         DemandeConge d = new DemandeConge();
         d.setId(rs.getInt("id"));
         d.setWorker(workerService.findById(rs.getInt("worker_id")));
         d.setStartDate(rs.getDate("start_date").toLocalDate());
         d.setEndDate(rs.getDate("end_date").toLocalDate());
-        d.setType(TypeConge.valueOf(rs.getString("type")));
+
+        // 🛠️ Safe mapping from DB string to Enum
+        String dbType = rs.getString("type").toUpperCase();
+        TypeConge type;
+        switch (dbType) {
+            case "PAID", "ANNUEL" -> type = TypeConge.ANNUEL;
+            case "SICK", "MALADIE" -> type = TypeConge.MALADIE;
+            case "MATERNITY", "MATERNITE" -> type = TypeConge.MATERNITE;
+            case "UNPAID", "SANS_SOLDE" -> type = TypeConge.SANS_SOLDE;
+            default -> type = TypeConge.AUTRE;
+        }
+        d.setType(type);
+
         d.setReason(rs.getString("reason"));
-        d.setStatus(Status.valueOf(rs.getString("status")));
+
+        String dbStatus = rs.getString("status").toUpperCase();
+        try {
+            d.setStatus(Status.valueOf(dbStatus));
+        } catch (IllegalArgumentException e) {
+            System.err.println("❌ Unknown status: " + dbStatus);
+            d.setStatus(Status.EN_ATTENTE_SECRETAIRE); // default fallback
+        }
 
         int secId = rs.getInt("secretaire_decision_id");
         if (secId != 0) d.setSecretaireDecision(decisionService.findById(secId));
@@ -234,4 +292,5 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
 
         return d;
     }
+
 }

@@ -1,32 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.Image?>
+
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="tn.test.Controllers.User.Authentication.LoginController"
-            stylesheets="@/styles/loginstyle.css"
-            prefWidth="800" prefHeight="500">
+            stylesheets="@loginstyle.css"
+            prefWidth="800" prefHeight="600">
 
-    <!-- 🔐 Login Form -->
     <center>
-        <VBox alignment="CENTER" spacing="15" styleClass="login-section" prefWidth="300" maxWidth="300">
-            <Label text="Connexion à Falleh Tech" styleClass="title"/>
+        <StackPane fx:id="centerPane" styleClass="center-pane" >
+            <VBox fx:id="loginContainer"
+                  alignment="CENTER"
+                  spacing="20"
+                  styleClass="login-container"
+                  maxWidth="450"
+            >
 
-            <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
-            <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
-            <Label fx:id="emailError" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;" visible="false" />
+                <ImageView fitWidth="180" fitHeight="80" pickOnBounds="true" preserveRatio="true"
+                           styleClass="logo">
+                    <image>
+                        <Image url="@/Images/logo.png"/>
+                    </image>
+                </ImageView>
 
-            <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="input-field"/>
-            <Label fx:id="passwordError" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;" visible="false" />
+                <Label text="Connexion à United Service" styleClass="title"/>
 
-            <Button fx:id="loginButton" text="Se Connecter" styleClass="green-button"/>
+                <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
 
-            <HBox spacing="5" alignment="CENTER">
-                <Label text="Pas encore inscrit ?" />
-                <Hyperlink fx:id="signup" text="Rejoignez-nous !" />
-            </HBox>
-        </VBox>
+                <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
+                <Label fx:id="emailError" styleClass="field-error" visible="false"/>
+
+                <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="input-field"/>
+                <Label fx:id="passwordError" styleClass="field-error" visible="false"/>
+
+                <Button fx:id="loginButton" text="Se Connecter" styleClass="btn-primary" />
+
+
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="Not Stuff Member" styleClass="text-muted"/>
+                    <Hyperlink fx:id="worker" text="Worker Page !" styleClass="link-primary"/>
+                </HBox>
+            </VBox>
+            <VBox fx:id="workerContainer" alignment="CENTER" spacing="20" styleClass="login-container" maxWidth="350" visible="false" managed="false">
+                <ImageView fitWidth="180" fitHeight="80" pickOnBounds="true" preserveRatio="true"
+                           styleClass="logo">
+                    <image>
+                        <Image url="@/Images/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <Label text="Connexion Employé" styleClass="title" />
+                <TextField fx:id="cinField" promptText="Entrez votre CIN" styleClass="input-field"/>
+                <Label fx:id="cinError" styleClass="field-error" visible="false"/>
+                <Button fx:id="cinLoginButton" text="Connexion" styleClass="btn-primary" />
+
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="Vous êtes un utilisateur ?" styleClass="text-muted"/>
+                    <Hyperlink fx:id="userBack" text="Page Utilisateur" styleClass="link-primary"/>
+                </HBox>
+            </VBox>
+        </StackPane>
     </center>
 </BorderPane>

@@ -16,6 +16,8 @@ import java.io.IOException;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tn.test.entities.User;
+import tn.test.tools.SessionManager;
 
 public class MainController {
 
@@ -24,9 +26,9 @@ public class MainController {
     @FXML private AnchorPane mainContent;
     @FXML private ImageView profileImage;
     @FXML private Label navTitle;
-
+    @FXML private MenuButton profileMenu;
     @FXML private Button btnDashboard, btnUsers, btnBlog, btnLogout, toggleSidebarBtn;
-
+    private User currentUser = SessionManager.getInstance().getCurrentUser();
     private boolean sidebarVisible = true;
     private Button activeButton = null;
     @FXML private Button notificationBtn;
@@ -36,6 +38,7 @@ public class MainController {
         loadInitialPage();
         loadProfileImage();
         sidebar.setTranslateX(0);
+        profileMenu.setText("👤 "+currentUser.getName());
     }
 
 
@@ -131,9 +134,9 @@ public class MainController {
         setActive(btnDashboard);
     }
 
-    @FXML private void goToBlogs() {
+    @FXML private void goToDemandes() {
         setNavTitle("📋 Blog");
-        loadPage("/views/Worker/ShowWorkers.fxml");
+        loadPage("/views/Worker/WorkerDashboard.fxml");
         setActive(btnBlog);
     }
 

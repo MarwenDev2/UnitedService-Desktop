@@ -1,0 +1,49 @@
+/* PostulerConge.css */
+.root {
+    -fx-background-color: #0A0A0A;
+    -fx-padding: 40;
+    -fx-font-family: "Segoe UI";
+}
+
+.form-title {
+    -fx-font-size: 26px;
+    -fx-text-fill: #C6A34F;
+    -fx-font-weight: bold;
+}
+
+.label {
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 14px;
+}
+
+.text-area, .combo-box, .date-picker {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #FFF;
+    -fx-border-color: #C6A34F;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8;
+}
+
+.text-area:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #FFD700;
+}
+
+.submit-button {
+    -fx-background-color: #C6A34F;
+    -fx-text-fill: #000;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 18;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.submit-button:hover {
+    -fx-background-color: #FFD700;
+}
+
+#errorLabel {
+    -fx-font-size: 13px;
+    -fx-padding: 6 0 0 0;
+}

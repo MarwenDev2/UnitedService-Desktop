@@ -59,10 +59,9 @@
                     <VBox alignment="CENTER" spacing="8" styleClass="logo-section">
                         <ImageView fx:id="logoImage" fitWidth="140" preserveRatio="true"/>
                     </VBox>
-
-                    <Button fx:id="accueilButton" text="Page d'accueil" onAction="#goToAccueil" styleClass="sidebar-button"/>
-
-                    <Button fx:id="blogButton" text="Blog" onAction="#goToBlog" styleClass="sidebar-button"/>
+                    <Button fx:id="accueilButton" text="🏠 Tableau de bord" onAction="#goToAccueil" styleClass="sidebar-button"/>
+                    <Button fx:id="demandeCongeButton" text="📝 Demande de congé" onAction="#goToDemandeConge" styleClass="sidebar-button"/>
+                    <Button fx:id="historiqueButton" text="📜 Historique des congés" onAction="#goToHistorique" styleClass="sidebar-button"/>
                 </VBox>
             </left>
 

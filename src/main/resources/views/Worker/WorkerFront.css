@@ -1,0 +1,113 @@
+/* === Main Container Background === */
+#mainContent {
+    -fx-padding: 40;
+    -fx-background-color: #0E0E0E; /* Deep black */
+}
+
+/* === Welcome Title === */
+#welcomeLabel {
+    -fx-font-size: 28px;
+    -fx-text-fill: #F2C14E; /* Gold-Yellow */
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* === Info Boxes === */
+.info-box {
+    -fx-background-color: #b3b2b2;
+    -fx-padding: 15 25;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-border-color: #F2C14E;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-min-width: 160;
+}
+
+.info-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+.info-value {
+    -fx-font-size: 22px;
+    -fx-text-fill: #F2C14E;
+    -fx-font-weight: bold;
+}
+
+/* === Demande Cards === */
+.demande-card {
+    -fx-spacing: 8;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #F2C14E;
+    -fx-background-color: #FFF;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);
+    -fx-min-width: 240;
+    -fx-max-width: 240;
+    -fx-padding: 16;
+    -fx-transition: all 0.2s ease;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F2C14E; /* Gold for title */
+}
+
+.card-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #EEEEEE; /* Almost white for readability */
+}
+
+.status-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 4 10;
+    -fx-text-fill: black;
+}
+
+/* Status Backgrounds */
+.status-ACCEPTE {
+    -fx-background-color: #A5D6A7; /* Light green */
+}
+
+.status-REFUSE_SECRETAIRE,
+.status-REFUSE_ADMIN {
+    -fx-background-color: #EF9A9A; /* Light red */
+}
+
+.status-EN_ATTENTE_RH,
+.status-EN_ATTENTE_ADMIN {
+    -fx-background-color: #FFD54F; /* Light amber */
+}
+
+
+/* === Primary Button === */
+.primary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #F2C14E;
+    -fx-text-fill: #F2C14E;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.primary-button:hover {
+    -fx-background-color: #F2C14E;
+    -fx-text-fill: black;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #D4AF37;
+    -fx-text-fill: black;
+}

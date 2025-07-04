@@ -45,7 +45,7 @@ public class HomeController {
     }
 
     @FXML
-    private void loadPosts() { loadScene("/views/Worker/ShowWorkers.fxml"); }
+    private void loadPosts() { loadScene("/views/Worker/WorkerDashboard.fxml"); }
 
 
     private void loadScene(String fxmlPath) {

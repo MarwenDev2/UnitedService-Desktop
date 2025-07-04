@@ -4,7 +4,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<?import java.lang.String?>
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.test.Controllers.MainController"
@@ -14,24 +13,21 @@
     <!-- SIDEBAR -->
     <left>
         <VBox fx:id="sidebar"
-              prefWidth="240"
-              minWidth="0"
-              maxWidth="240"
-              spacing="10"
-              style="-fx-background-color: #b6d7a8; -fx-padding: 20;">
+              prefWidth="250"
+              spacing="15"
+              style="-fx-background-color: #e9f5ec; -fx-padding: 25; -fx-border-width: 0 1 0 0; -fx-border-color: #cde2d4;">
             <children>
-                <HBox alignment="CENTER" prefHeight="140">
+                <HBox alignment="CENTER" prefHeight="120">
                     <ImageView fx:id="profileImage"
-                               fitHeight="140"
-                               fitWidth="140"
+                               fitHeight="100"
+                               fitWidth="100"
                                preserveRatio="true"
-                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.3, 0, 1);"/>
+                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0.4, 0, 2); -fx-background-radius: 50%;"/>
                 </HBox>
-                <VBox spacing="5">
-                    <Button fx:id="btnDashboard" onAction="#goToDashboard" styleClass="sidebar-button" text="🏠 Dashboard"/>
+                <VBox spacing="8">
+                    <Button fx:id="btnDashboard" onAction="#goToDashboard" styleClass="sidebar-button" text="🏠 Tableau de Bord"/>
                     <Button fx:id="btnUsers" onAction="#goToUsers" styleClass="sidebar-button" text="👥 Utilisateurs"/>
-                    <Button fx:id="btnBlog" onAction="#goToBlogs" styleClass="sidebar-button" text="📖 Blogs"/>
-
+                    <Button fx:id="btnBlog" onAction="#goToDemandes" styleClass="sidebar-button" text="📰 Demandes Congés"/>
                 </VBox>
             </children>
         </VBox>
@@ -39,19 +35,15 @@
 
     <!-- NAVBAR -->
     <top>
-        <HBox style="-fx-background-color: white; -fx-padding: 10;" spacing="10" alignment="CENTER_LEFT">
+        <HBox styleClass="navbar" spacing="12" alignment="CENTER_LEFT">
             <children>
                 <Button fx:id="toggleSidebarBtn" text="☰" onAction="#toggleSidebar" styleClass="toggle-button"/>
-                <Label fx:id="navTitle" text="App Navigation" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label fx:id="navTitle" text="United Service" styleClass="navbar-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="notificationBtn" text="🔔" styleClass="icon-button">
-                    <styleClass>
-                        <String fx:value="notification-button"/>
-                    </styleClass>
-                </Button>
+                <Button fx:id="notificationBtn" text="🔔" styleClass="notification-btn"/>
                 <MenuButton fx:id="profileMenu" text="👤 Mohamed ▼" styleClass="profile-menu">
                     <items>
-                        <MenuItem onAction="#goToProfile" text="Profile"/>
+                        <MenuItem onAction="#goToProfile" text="Mon Profil"/>
                         <MenuItem text="Déconnexion" onAction="#goToLogout"/>
                     </items>
                 </MenuButton>

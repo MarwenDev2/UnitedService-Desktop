@@ -21,7 +21,7 @@ public class DecisionService implements CrudService<Decision> {
     }
 
     @Override
-    public void add(Decision decision) {
+    public boolean add(Decision decision) {
         String sql = "INSERT INTO decision (decision_by_id, approved, comment, date) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -30,12 +30,15 @@ public class DecisionService implements CrudService<Decision> {
             stmt.setString(3, decision.getComment());
             stmt.setTimestamp(4, Timestamp.valueOf(decision.getDate()));
 
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
             System.out.println("✅ Decision added successfully.");
+            return rows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("❌ Error adding decision: " + e.getMessage());
+            return false;
         }
     }
+
 
     @Override
     public void update(Decision decision) {
