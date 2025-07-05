@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<BorderPane fx:id="borderPane" prefHeight="683.0"
-            stylesheets="@WorkerDashboard.css" prefWidth="967.0"
-            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="borderPane" prefHeight="683.0" prefWidth="967.0"
+            stylesheets="@WorkerDashboard.css"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.test.Controllers.Worker.WorkerDashboardController">
-    <!-- Center Content (Posts Management) -->
+
     <center>
-        <VBox spacing="25" alignment="TOP_CENTER" style="-fx-padding: 30; -fx-background-color: #f5fdf7;">
-            <Label text="Bienvenue 👋"
-                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+        <VBox spacing="25" alignment="TOP_CENTER" style="-fx-padding: 30; -fx-background-color: #f9f5f0;">
 
-            <Label fx:id="welcomeLabel"
-                   text="Vous êtes connecté en tant que [Nom]"
-                   style="-fx-font-size: 14px; -fx-text-fill: #444;" />
+            <!-- Welcome Section with Animation -->
+            <Label fx:id="welcomeLabel" styleClass="welcome-label"/>
 
-            <HBox spacing="30" alignment="CENTER">
-                <VBox spacing="10" alignment="CENTER" styleClass="dashboard-card">
-                    <Label text="📅 Demandes en cours" styleClass="card-title"/>
-                    <Label fx:id="pendingCountLabel" text="2" styleClass="card-count"/>
+            <!-- Stats Grid with Animated Cards -->
+            <GridPane hgap="30" vgap="20" styleClass="animate-fade">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+                    <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+                    <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+                    <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+                </columnConstraints>
+
+                <VBox styleClass="stat-card " GridPane.columnIndex="0">
+                    <Label text="Demandes en attente" styleClass="stat-title"/>
+                    <Label fx:id="pendingCount" styleClass="stat-number"/>
                 </VBox>
-                <VBox spacing="10" alignment="CENTER" styleClass="dashboard-card">
-                    <Label text="✅ Acceptées" styleClass="card-title"/>
-                    <Label fx:id="approvedCountLabel" text="5" styleClass="card-count"/>
+
+                <VBox styleClass="stat-card" GridPane.columnIndex="1">
+                    <Label text="Demandes acceptées" styleClass="stat-title"/>
+                    <Label fx:id="acceptedCount" styleClass="stat-number"/>
                 </VBox>
-                <VBox spacing="10" alignment="CENTER" styleClass="dashboard-card">
-                    <Label text="❌ Refusées" styleClass="card-title"/>
-                    <Label fx:id="refusedCountLabel" text="1" styleClass="card-count"/>
+
+                <VBox styleClass="stat-card" GridPane.columnIndex="2">
+                    <Label text="Demandes refusées" styleClass="stat-title"/>
+                    <Label fx:id="refusedCount" styleClass="stat-number "/>
                 </VBox>
+
+                <VBox styleClass="stat-card" GridPane.columnIndex="3">
+                    <Label text="Utilisateurs" styleClass="stat-title"/>
+                    <Label fx:id="userCount" styleClass="stat-number "/>
+                </VBox>
+            </GridPane>
+
+            <!-- Quick Actions -->
+            <HBox alignment="CENTER" spacing="30" styleClass="animate-fade">
+                <Button text="📊 Statistiques" onAction="#goToStats" styleClass="button"/>
             </HBox>
 
-            <Label text="Dernières demandes" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+            <!-- Recent Notifications Section -->
+            <Label text="Historique des actions récentes" styleClass="section-title"/>
 
-            <TableView fx:id="recentLeavesTable" prefWidth="700" style="-fx-border-color: #ccc;">
-                <columns>
-                    <TableColumn text="Date" prefWidth="100"/>
-                    <TableColumn text="Motif" prefWidth="300"/>
-                    <TableColumn text="Statut" prefWidth="100"/>
-                </columns>
-            </TableView>
+            <ScrollPane fitToWidth="true" prefHeight="250" styleClass="animate-fade">
+                <VBox fx:id="notificationContainer" spacing="15" style="-fx-padding: 10;"/>
+            </ScrollPane>
+
         </VBox>
-
     </center>
 </BorderPane>

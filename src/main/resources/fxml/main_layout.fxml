@@ -4,6 +4,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.test.Controllers.MainController"
@@ -13,21 +15,46 @@
     <!-- SIDEBAR -->
     <left>
         <VBox fx:id="sidebar"
-              prefWidth="250"
+              prefWidth="280"
               spacing="15"
-              style="-fx-background-color: #e9f5ec; -fx-padding: 25; -fx-border-width: 0 1 0 0; -fx-border-color: #cde2d4;">
+              style="-fx-background-color: #2c2c2c; -fx-padding: 25; -fx-border-width: 0 1 0 0; -fx-border-color: #3c3c3c;">
             <children>
                 <HBox alignment="CENTER" prefHeight="120">
                     <ImageView fx:id="profileImage"
                                fitHeight="100"
                                fitWidth="100"
                                preserveRatio="true"
-                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0.4, 0, 2); -fx-background-radius: 50%;"/>
+                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.4, 0, 2); -fx-background-radius: 50%;"/>
                 </HBox>
                 <VBox spacing="8">
                     <Button fx:id="btnDashboard" onAction="#goToDashboard" styleClass="sidebar-button" text="🏠 Tableau de Bord"/>
-                    <Button fx:id="btnUsers" onAction="#goToUsers" styleClass="sidebar-button" text="👥 Utilisateurs"/>
                     <Button fx:id="btnBlog" onAction="#goToDemandes" styleClass="sidebar-button" text="📰 Demandes Congés"/>
+                    <!-- Utilisateurs Section with Submenu -->
+                    <VBox spacing="0">
+                        <Button fx:id="btnUsers" onAction="#toggleUsersSubmenu" styleClass="sidebar-button" text="👥 Utilisateurs">
+                            <graphic>
+                                <ImageView fitHeight="16" fitWidth="16" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/Images/arrow-right.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <VBox fx:id="usersSubmenu" styleClass="submenu" managed="false" visible="false">
+                            <Button fx:id="btnListWorkers" onAction="#goToListWorkers" styleClass="sidebar-sub-button">
+                                <graphic>
+                                    <Text style="-fx-font-family: 'Segoe UI Emoji'; -fx-font-size: 14;">📋</Text>
+                                </graphic>
+                                <text>Liste des Employés</text>
+                            </Button>
+                            <Button fx:id="btnAddWorker" onAction="#goToAddWorker" styleClass="sidebar-sub-button">
+                                <graphic>
+                                    <Text style="-fx-font-family: 'Segoe UI Emoji'; -fx-font-size: 14;">➕</Text>
+                                </graphic>
+                                <text>Ajouter Employé</text>
+                            </Button>
+                        </VBox>
+                    </VBox>
                 </VBox>
             </children>
         </VBox>
@@ -40,7 +67,6 @@
                 <Button fx:id="toggleSidebarBtn" text="☰" onAction="#toggleSidebar" styleClass="toggle-button"/>
                 <Label fx:id="navTitle" text="United Service" styleClass="navbar-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="notificationBtn" text="🔔" styleClass="notification-btn"/>
                 <MenuButton fx:id="profileMenu" text="👤 Mohamed ▼" styleClass="profile-menu">
                     <items>
                         <MenuItem onAction="#goToProfile" text="Mon Profil"/>

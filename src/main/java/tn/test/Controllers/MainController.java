@@ -28,27 +28,61 @@ public class MainController {
     @FXML private Label navTitle;
     @FXML private MenuButton profileMenu;
     @FXML private Button btnDashboard, btnUsers, btnBlog, btnLogout, toggleSidebarBtn;
+    @FXML private VBox usersSubmenu;
+    @FXML private Button btnListWorkers, btnAddWorker;
+
     private User currentUser = SessionManager.getInstance().getCurrentUser();
     private boolean sidebarVisible = true;
+    private boolean usersSubmenuVisible = false;
     private Button activeButton = null;
-    @FXML private Button notificationBtn;
-    private int notificationCount = 0;
 
     public void initialize() {
         loadInitialPage();
         loadProfileImage();
         sidebar.setTranslateX(0);
         profileMenu.setText("👤 "+currentUser.getName());
+
+        // Set arrow icon for users button
+        ImageView arrowIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/arrow-right.png")));
+        arrowIcon.setFitHeight(12);
+        arrowIcon.setFitWidth(12);
+        btnUsers.setGraphic(arrowIcon);
     }
 
+    @FXML
+    private void toggleUsersSubmenu() {
+        usersSubmenuVisible = !usersSubmenuVisible;
+        usersSubmenu.setManaged(usersSubmenuVisible);
+        usersSubmenu.setVisible(usersSubmenuVisible);
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        // Rotate arrow icon
+        RotateTransition rotate = new RotateTransition(Duration.millis(200), btnUsers.getGraphic());
+        rotate.setByAngle(usersSubmenuVisible ? 90 : -90);
+        rotate.play();
+
+        // Animate submenu
+        if (usersSubmenuVisible) {
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), usersSubmenu);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        }
     }
+
+    @FXML
+    private void goToListWorkers() {
+        setNavTitle("👥 Liste des Employés");
+        loadPage("/views/User/Admin/WorkersList.fxml");
+        setActive(btnListWorkers);
+    }
+
+    @FXML
+    private void goToAddWorker() {
+        setNavTitle("➕ Ajouter Employé");
+        loadPage("/views/User/Admin/AddWorker.fxml");
+        setActive(btnAddWorker);
+    }
+
     private void loadInitialPage() {
         setNavTitle("🏠 Dashboard");
         loadPage("/views/Worker/WorkerDashboard.fxml");
@@ -88,9 +122,11 @@ public class MainController {
         }
     }
 
+
+
     @FXML
     private void toggleSidebar() {
-        double targetWidth = sidebarVisible ? 0 : 240;
+        double targetWidth = sidebarVisible ? 0 : 250;
         double targetOpacity = sidebarVisible ? 0 : 1;
 
         Timeline timeline = new Timeline(
@@ -128,27 +164,18 @@ public class MainController {
         navTitle.setText(title);
     }
 
-    @FXML private void goToDashboard() {
+    @FXML
+    private void goToDashboard() {
         setNavTitle("🏠 Dashboard");
         loadPage("/views/Worker/WorkerDashboard.fxml");
         setActive(btnDashboard);
     }
 
-    @FXML private void goToDemandes() {
-        setNavTitle("📋 Blog");
+    @FXML
+    private void goToDemandes() {
+        setNavTitle("📋 Demandes Congés");
         loadPage("/views/User/Admin/AdminConge.fxml");
         setActive(btnBlog);
-    }
-
-    @FXML private void goToUsers() {
-        setNavTitle("📋 Commande");
-        loadPage("/views/User/Admin/Dashboard.fxml");
-        setActive(btnUsers);
-    }
-
-
-    public AnchorPane getMainContent() {
-        return mainContent;
     }
 
     @FXML
@@ -160,20 +187,13 @@ public class MainController {
     @FXML
     private void goToLogout() {
         try {
-            Parent landingRoot = FXMLLoader.load(getClass().getResource("/views/User/Authentication/Login.fxml")); // ✅ adjust path if needed
+            Parent landingRoot = FXMLLoader.load(getClass().getResource("/views/User/Authentication/Login.fxml"));
             Scene landingScene = new Scene(landingRoot);
-
-            // Apply stylesheets like in GoogleDrive.java if needed
             landingScene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
-            landingScene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
-            landingScene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
-
             Stage stage = (Stage) mainContent.getScene().getWindow();
             stage.setScene(landingScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 }

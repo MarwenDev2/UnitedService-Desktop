@@ -1,0 +1,199 @@
+/* === Base Styles === */
+.root {
+    -fx-background-color: #f9f5f0;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-padding: 20;
+}
+
+/* === Form Container === */
+.form-container {
+    -fx-padding: 30;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 3);
+    -fx-border-color: #e0d6c2;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-text-fill: #C6A34F;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 20 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.2, 0, 1);
+}
+
+/* === Form Grid === */
+.form-grid {
+    -fx-padding: 0 20 20 20;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: bold;
+}
+
+/* === Input Fields === */
+.form-input, .form-combo, .form-textarea, .form-datepicker, .form-spinner {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8d8d8;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 3, 0.1, 0, 1);
+    -fx-transition: all 0.3s ease;
+}
+
+.form-input:focused, .form-combo:focused, .form-textarea:focused,
+.form-datepicker:focused, .form-spinner:focused {
+    -fx-border-color: #C6A34F;
+    -fx-effect: dropshadow(gaussian, rgba(198,163,79,0.2), 8, 0.2, 0, 2);
+}
+
+.form-textarea {
+    -fx-pref-row-count: 3;
+    -fx-wrap-text: true;
+}
+
+/* === Radio Buttons === */
+.form-radio {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-cursor: hand;
+}
+
+.form-radio .radio {
+    -fx-border-color: #C6A34F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-background-color: transparent;
+}
+
+.form-radio:selected .radio {
+    -fx-background-color: #C6A34F;
+    -fx-border-color: #C6A34F;
+}
+
+/* === Buttons === */
+.primary-button {
+    -fx-background-color: #C6A34F;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 25;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.2, 0, 2);
+    -fx-transition: all 0.2s ease;
+}
+
+.primary-button:hover {
+    -fx-background-color: #D4AF37;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 7, 0.3, 0, 3);
+}
+
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #555555;
+    -fx-font-weight: bold;
+    -fx-padding: 10 25;
+    -fx-background-radius: 8;
+    -fx-border-color: #C6A34F;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #f5f0e6;
+}
+
+/* === Error Label === */
+.error-label {
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 0 0;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { -fx-translate-y: 20; -fx-opacity: 0; }
+    to { -fx-translate-y: 0; -fx-opacity: 1; }
+}
+
+.animate-fade {
+    -fx-animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide {
+    -fx-animation: slideIn 0.5s ease-out;
+}
+
+
+/* === Image Upload Section === */
+.image-upload-container {
+    -fx-padding: 20;
+    -fx-background-color: #f9f9f9;
+    -fx-background-radius: 12;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.2, 0, 1);
+}
+
+.profile-image {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.2, 0, 1);
+    -fx-background-radius: 75;
+    -fx-border-radius: 75;
+    -fx-border-color: #C6A34F;
+    -fx-border-width: 2;
+}
+
+.upload-button {
+    -fx-background-color: #5a6d8a;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 20;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0.2, 0, 1);
+    -fx-transition: all 0.2s ease;
+}
+
+.upload-button:hover {
+    -fx-background-color: #6d7f9d;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0.3, 0, 2);
+}
+
+.image-path-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #777777;
+    -fx-font-style: italic;
+    -fx-max-width: 180;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* Animation for image upload */
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+}
+
+.image-upload-animation {
+    -fx-animation: pulse 0.5s ease-out;
+}

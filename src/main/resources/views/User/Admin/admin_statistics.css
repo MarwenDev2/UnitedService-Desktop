@@ -1,0 +1,49 @@
+.title-label {
+    -fx-font-size: 28px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+.subtitle-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #34495e;
+}
+
+.back-button {
+    -fx-background-color: #2a7ae2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+}
+
+.back-button:hover {
+    -fx-background-color: #1c5bbf;
+}
+
+.title-label {
+    -fx-font-size: 28px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+.subtitle-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #34495e;
+    -fx-padding: 10 0 5 0;
+}
+
+.back-button {
+    -fx-background-color: #2a7ae2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.back-button:hover {
+    -fx-background-color: #1c5bbf;
+}

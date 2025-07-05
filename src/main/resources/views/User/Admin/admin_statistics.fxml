@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+<VBox fx:id="rootContainer"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.test.Controllers.User.Admin.AdminStatisticsController"
+      spacing="30"
+      alignment="CENTER"
+      stylesheets="@admin_statistics.css"
+      style="-fx-padding: 40; -fx-background-color: #f9fcff;">
+
+    <Label text="📊 Statistiques des demandes" styleClass="title-label"/>
+    <Label fx:id="totalDemandesLabel" styleClass="subtitle-label"/>
+
+    <HBox spacing="30">
+        <PieChart fx:id="statusPieChart" prefWidth="300" prefHeight="300"/>
+        <PieChart fx:id="typePieChart" prefWidth="300" prefHeight="300"/>
+    </HBox>
+
+    <Label text="📈 Demandes par mois" styleClass="subtitle-label"/>
+    <BarChart fx:id="monthlyBarChart" prefWidth="600" prefHeight="300"
+              title="Évolution mensuelle"
+              animated="true">
+        <xAxis>
+            <CategoryAxis label="Mois"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Nombre"/>
+        </yAxis>
+    </BarChart>
+
+    <Button text="⬅ Retour" onAction="#backToDashboard" styleClass="back-button"/>
+</VBox>

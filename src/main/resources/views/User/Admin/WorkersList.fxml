@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@WorkersList.css"
+            fx:controller="tn.test.Controllers.User.Admin.WorkersListController">
+
+    <top>
+        <HBox styleClass="header-box">
+            <Label text="Gestion des Employés" styleClass="page-title"/>
+
+            <HBox styleClass="filter-box" spacing="10">
+                <ComboBox fx:id="filterComboBox" promptText="Filtrer par département"/>
+                <TextField fx:id="searchField" promptText="Rechercher..."/>
+                <Button text="Filtrer" styleClass="filter-button" onAction="#handleFilter"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <FlowPane fx:id="workersContainer" styleClass="workers-container"/>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox styleClass="stats-box" spacing="30">
+            <Label fx:id="totalWorkersLabel" styleClass="stat-label"/>
+            <Label fx:id="activeWorkersLabel" styleClass="stat-label"/>
+            <Label fx:id="onLeaveLabel" styleClass="stat-label"/>
+        </HBox>
+    </bottom>
+</BorderPane>

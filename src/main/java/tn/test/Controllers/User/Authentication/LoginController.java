@@ -25,7 +25,7 @@ public class LoginController {
     @FXML private StackPane centerPane;
     @FXML private VBox loginContainer;
     @FXML private VBox workerContainer;
-    @FXML private Hyperlink worker;
+    @FXML private Hyperlink workerLink;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private TextField cinField;
@@ -35,39 +35,52 @@ public class LoginController {
     @FXML private Label emailError;
     @FXML private Label passwordError;
     @FXML private Label cinError;
-    @FXML private Hyperlink userBack;
-
+    @FXML private Hyperlink userBackLink;
 
     private final UserService userService = new UserService();
-    private WorkerService workerService = new WorkerService();
+    private final WorkerService workerService = new WorkerService();
+    private boolean isFlipping = false;
 
     @FXML
     public void initialize() {
+        // Initialize UI state
         errorLabel.setVisible(false);
         cinError.setVisible(false);
         loginContainer.setOpacity(0);
         loginContainer.setTranslateY(30);
         workerContainer.setVisible(false);
         workerContainer.setManaged(false);
-        setupAnimations();
 
+        // Set up animations
+        setupInitialAnimation();
+
+        // Set up event handlers
         loginButton.setOnAction(event -> handleLogin());
         cinLoginButton.setOnAction(event -> handleCinLogin());
-        worker.setOnMouseClicked(event -> flipToWorker());
-        userBack.setOnMouseClicked(event -> flipToUser());
+        workerLink.setOnAction(event -> flipToWorker());
+        userBackLink.setOnAction(event -> flipToUser());
 
+        // Set up 3D perspective for flip animation
+        centerPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                PerspectiveCamera camera = new PerspectiveCamera();
+                camera.setFieldOfView(60);
+                newScene.setCamera(camera);
+            }
+        });
     }
 
-    private void setupAnimations() {
-        FadeTransition ft = new FadeTransition(Duration.seconds(0.7), loginContainer);
-        ft.setFromValue(0);
-        ft.setToValue(1);
+    private void setupInitialAnimation() {
+        FadeTransition fade = new FadeTransition(Duration.millis(700), loginContainer);
+        fade.setFromValue(0);
+        fade.setToValue(1);
 
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.7), loginContainer);
-        tt.setFromY(30);
-        tt.setToY(0);
+        TranslateTransition translate = new TranslateTransition(Duration.millis(700), loginContainer);
+        translate.setFromY(30);
+        translate.setToY(0);
 
-        new ParallelTransition(ft, tt).play();
+        ParallelTransition parallel = new ParallelTransition(fade, translate);
+        parallel.play();
     }
 
     private void handleLogin() {
@@ -89,10 +102,6 @@ public class LoginController {
         }
 
         User user = userService.login(email, password);
-        if (user == null) {
-            showError("Email ou mot de passe incorrect.");
-            return;
-        }
         if (user != null) {
             try {
                 proceedWithLoginUser(user);
@@ -116,13 +125,6 @@ public class LoginController {
         }
 
         Worker worker = workerService.findByCin(cin);
-
-        if (worker == null) {
-            cinError.setText("CIN non reconnu");
-            cinError.setVisible(true);
-            return;
-        }
-
         if (worker != null) {
             try {
                 SessionManager.getInstance().createSession(worker);
@@ -132,19 +134,20 @@ public class LoginController {
                 e.printStackTrace();
             }
         } else {
-            showError("CIN incorrect ou non reconnu.");
+            cinError.setText("CIN non reconnu");
+            cinError.setVisible(true);
         }
     }
 
-
     private void flipToWorker() {
-        PerspectiveCamera camera = new PerspectiveCamera();
-        centerPane.getScene().setCamera(camera);
+        if (isFlipping) return;
+        isFlipping = true;
 
-        RotateTransition rotateOut = new RotateTransition(Duration.millis(600), centerPane);
+        RotateTransition rotateOut = new RotateTransition(Duration.millis(500), centerPane);
+        rotateOut.setAxis(Rotate.Y_AXIS);
         rotateOut.setFromAngle(0);
         rotateOut.setToAngle(90);
-        rotateOut.setAxis(Rotate.Y_AXIS);
+        rotateOut.setInterpolator(Interpolator.EASE_OUT);
 
         rotateOut.setOnFinished(event -> {
             loginContainer.setVisible(false);
@@ -152,10 +155,12 @@ public class LoginController {
             workerContainer.setVisible(true);
             workerContainer.setManaged(true);
 
-            RotateTransition rotateIn = new RotateTransition(Duration.millis(600), centerPane);
+            RotateTransition rotateIn = new RotateTransition(Duration.millis(500), centerPane);
+            rotateIn.setAxis(Rotate.Y_AXIS);
             rotateIn.setFromAngle(-90);
             rotateIn.setToAngle(0);
-            rotateIn.setAxis(Rotate.Y_AXIS);
+            rotateIn.setInterpolator(Interpolator.EASE_IN);
+            rotateIn.setOnFinished(e -> isFlipping = false);
             rotateIn.play();
         });
 
@@ -163,13 +168,14 @@ public class LoginController {
     }
 
     private void flipToUser() {
-        PerspectiveCamera camera = new PerspectiveCamera();
-        centerPane.getScene().setCamera(camera);
+        if (isFlipping) return;
+        isFlipping = true;
 
-        RotateTransition rotateOut = new RotateTransition(Duration.millis(600), centerPane);
+        RotateTransition rotateOut = new RotateTransition(Duration.millis(500), centerPane);
+        rotateOut.setAxis(Rotate.Y_AXIS);
         rotateOut.setFromAngle(0);
         rotateOut.setToAngle(-90);
-        rotateOut.setAxis(Rotate.Y_AXIS);
+        rotateOut.setInterpolator(Interpolator.EASE_OUT);
 
         rotateOut.setOnFinished(event -> {
             workerContainer.setVisible(false);
@@ -177,20 +183,29 @@ public class LoginController {
             loginContainer.setVisible(true);
             loginContainer.setManaged(true);
 
-            RotateTransition rotateIn = new RotateTransition(Duration.millis(600), centerPane);
+            RotateTransition rotateIn = new RotateTransition(Duration.millis(500), centerPane);
+            rotateIn.setAxis(Rotate.Y_AXIS);
             rotateIn.setFromAngle(90);
             rotateIn.setToAngle(0);
-            rotateIn.setAxis(Rotate.Y_AXIS);
+            rotateIn.setInterpolator(Interpolator.EASE_IN);
+            rotateIn.setOnFinished(e -> isFlipping = false);
             rotateIn.play();
         });
 
         rotateOut.play();
     }
 
-
     private void proceedWithLoginUser(User user) throws IOException {
         SessionManager.getInstance().createSession(user);
-        String fxmlPath = "/fxml/main_layout.fxml";
+        loadMainView("/fxml/main_layout.fxml");
+    }
+
+    private void proceedWithLoginWorker(Worker worker) throws IOException {
+        SessionManager.getInstance().createSession(worker);
+        loadMainView("/front/frontview.fxml");
+    }
+
+    private void loadMainView(String fxmlPath) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
         Scene scene = new Scene(root, 1300, 800);
         scene.getStylesheets().addAll(
@@ -200,31 +215,21 @@ public class LoginController {
                 getClass().getResource("/styles/sidebar.css").toExternalForm()
         );
 
-        Stage stage = (Stage) emailField.getScene().getWindow();
+        Stage stage = (Stage) centerPane.getScene().getWindow();
         stage.setScene(scene);
         stage.show();
     }
-
-    private void proceedWithLoginWorker(Worker worker) throws IOException {
-        SessionManager.getInstance().createSession(worker);
-        String fxmlPath = "/front/frontview.fxml";
-        Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().addAll(
-                getClass().getResource("/styles/main.css").toExternalForm(),
-                getClass().getResource("/styles/dashboard.css").toExternalForm(),
-                getClass().getResource("/styles/popup.css").toExternalForm(),
-                getClass().getResource("/styles/sidebar.css").toExternalForm()
-        );
-
-        Stage stage = (Stage) emailField.getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
 
     private void showError(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
+
+        // Shake animation for error
+        TranslateTransition shake = new TranslateTransition(Duration.millis(50), errorLabel);
+        shake.setFromX(0);
+        shake.setByX(10);
+        shake.setCycleCount(6);
+        shake.setAutoReverse(true);
+        shake.play();
     }
 }

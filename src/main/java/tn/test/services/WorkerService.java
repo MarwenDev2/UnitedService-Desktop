@@ -18,10 +18,19 @@ public class WorkerService implements CrudService<Worker> {
 
     @Override
     public boolean add(Worker worker) {
+        System.out.println("[SERVICE] Starting worker addition...");
         String sql = "INSERT INTO worker (name, cin, department, position, phone, email, salary, profile_image_path, gender, date_of_birth, address, creation_date, status, total_conge_days, used_conge_days) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            System.out.println("[SERVICE] Preparing statement...");
+
+            // Set all parameters with logging
+            System.out.println("[SERVICE] Setting parameters:");
+            System.out.println("  Name: " + worker.getName());
+            System.out.println("  CIN: " + worker.getCin());
+            // Add logging for all other fields...
+
             stmt.setString(1, worker.getName());
             stmt.setString(2, worker.getCin());
             stmt.setString(3, worker.getDepartment());
@@ -38,11 +47,14 @@ public class WorkerService implements CrudService<Worker> {
             stmt.setInt(14, worker.getTotalCongeDays());
             stmt.setInt(15, worker.getUsedCongeDays());
 
+            System.out.println("[SERVICE] Executing update...");
             int rows = stmt.executeUpdate();
-            System.out.println("✅ Worker added successfully.");
+            System.out.println("[SERVICE] Rows affected: " + rows);
+
             return rows > 0;
         } catch (SQLException e) {
-            System.err.println("❌ Error adding worker: " + e.getMessage());
+            System.err.println("[SERVICE] SQL Error:");
+            e.printStackTrace();
             return false;
         }
     }

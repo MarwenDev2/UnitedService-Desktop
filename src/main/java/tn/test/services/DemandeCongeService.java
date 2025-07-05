@@ -202,6 +202,25 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         return list;
     }
 
+    public List<DemandeConge> findRecentCongeForDashboard(int monthsBack) {
+        List<DemandeConge> list = new ArrayList<>();
+        String sql = "SELECT * FROM demande_conge WHERE date_demande >= NOW() - INTERVAL ? MONTH ORDER BY date_demande DESC";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, monthsBack);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractDemande(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
     public List<DemandeConge> findByDateRange(LocalDate start, LocalDate end) {
         List<DemandeConge> list = new ArrayList<>();
         String sql = "SELECT * FROM demande_conge WHERE start_date >= ? AND end_date <= ?";
@@ -316,6 +335,34 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         return 0;
     }
 
+    public int countByMonth(int month) {
+        String sql = """
+        SELECT COUNT(*) FROM demande_conge 
+        WHERE MONTH(date_demande) = ? AND YEAR(date_demande) = YEAR(CURDATE())
+    """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, month);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    public int countByType(TypeConge type) {
+        String sql = "SELECT COUNT(*) FROM demande_conge WHERE type = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, type.name());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
 
     private DemandeConge extractDemande(ResultSet rs) throws SQLException {

@@ -154,6 +154,52 @@ public class NotificationService implements CrudService<Notification> {
         return list;
     }
 
+    public List<Notification> findRecentActionsForAdmin(int adminId, int monthsBack) {
+        List<Notification> list = new ArrayList<>();
+        String sql = """
+        SELECT * FROM notification 
+        WHERE recipient_id = ? AND timestamp >= NOW() - INTERVAL ? MONTH
+        ORDER BY timestamp DESC
+        LIMIT 50
+    """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, adminId);
+            stmt.setInt(2, monthsBack);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Notification n = new Notification();
+                n.setId(rs.getInt("id"));
+                n.setRecipient(userService.findById(rs.getInt("recipient_id")));
+                n.setMessage(rs.getString("message"));
+                n.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+                n.setRead(rs.getBoolean("is_read"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    public int countUnreadNotifications(int userId) {
+        String sql = "SELECT COUNT(*) FROM notification WHERE recipient_id = ? AND is_read = false";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+
     private Notification extractNotification(ResultSet rs) throws SQLException {
         Notification n = new Notification();
         n.setId(rs.getInt("id"));

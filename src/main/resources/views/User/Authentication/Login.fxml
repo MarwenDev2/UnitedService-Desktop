@@ -42,7 +42,7 @@
 
                 <HBox spacing="5" alignment="CENTER">
                     <Label text="Not Stuff Member" styleClass="text-muted"/>
-                    <Hyperlink fx:id="worker" text="Worker Page !" styleClass="link-primary"/>
+                    <Hyperlink fx:id="workerLink" text="Worker Page !" styleClass="link-primary"/>
                 </HBox>
             </VBox>
             <VBox fx:id="workerContainer" alignment="CENTER" spacing="20" styleClass="login-container" maxWidth="350" visible="false" managed="false">
@@ -60,7 +60,7 @@
 
                 <HBox spacing="5" alignment="CENTER">
                     <Label text="Vous êtes un utilisateur ?" styleClass="text-muted"/>
-                    <Hyperlink fx:id="userBack" text="Page Utilisateur" styleClass="link-primary"/>
+                    <Hyperlink fx:id="userBackLink" text="Page Utilisateur" styleClass="link-primary"/>
                 </HBox>
             </VBox>
         </StackPane>

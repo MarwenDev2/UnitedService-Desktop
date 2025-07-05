@@ -1,45 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.test.Controllers.User.Admin.AdminCongeManagementController"
-            stylesheets="@admin-conge.css">
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="861.0" prefWidth="1070.0" stylesheets="@admin-conge.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.test.Controllers.User.Admin.AdminCongeManagementController">
 
     <top>
-        <VBox spacing="10" style="-fx-padding: 20 30 10 30;">
-            <Label fx:id="dashboardTitle" text="🗂️ Gestion des demandes de congés" styleClass="title-label" />
-            <Label fx:id="welcomeLabel" styleClass="subtitle-label" />
+        <VBox spacing="10" style="-fx-padding: 25 35 15 35; -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f5f0);">
+            <Label fx:id="dashboardTitle" styleClass="title-label" text="🗂️ Gestion des demandes de congés" />
+            <Label fx:id="welcomeLabel" styleClass="subtitle-label " text="Tableau de bord administratif des demandes de congés" />
         </VBox>
     </top>
 
     <center>
-        <VBox spacing="20" style="-fx-padding: 10 30 30 30;">
+        <VBox spacing="25" style="-fx-padding: 15 35 35 35;">
 
-            <HBox spacing="30" alignment="CENTER_LEFT">
-                <Label fx:id="pendingLabel" styleClass="stat-label" text="⏳ En attente:" />
-                <Label fx:id="acceptedLabel" styleClass="stat-label" text="✅ Acceptées:" />
-                <Label fx:id="refusedLabel" styleClass="stat-label" text="❌ Refusées:" />
+            <!-- Statistics Row -->
+            <HBox alignment="CENTER" spacing="30" styleClass="animate-slide">
+                <Label fx:id="pendingLabel" styleClass="stat-label " text="⏳ En attente: 0" />
+                <Label fx:id="acceptedLabel" styleClass="stat-label " text="✅ Acceptées: 0" />
+                <Label fx:id="refusedLabel" styleClass="stat-label " text="❌ Refusées: 0" />
             </HBox>
 
-            <HBox spacing="20" alignment="CENTER_LEFT">
-                <Label text="🔎 Statut :" styleClass="form-label"/>
-                <ComboBox fx:id="statusFilterCombo" prefWidth="150" />
-                <Label text="📍 Étape actuelle :" styleClass="form-label"/>
-                <ComboBox fx:id="stageFilterCombo" prefWidth="150" />
+            <!-- Filters Row -->
+            <HBox alignment="CENTER_LEFT" spacing="20" styleClass="animate-fade">
+                <Label styleClass="form-label" text="🔎 Statut :" />
+                <ComboBox fx:id="statusFilterCombo" prefWidth="180" styleClass="animate-slide" />
+                <Label styleClass="form-label" text="📍 Étape actuelle :" />
+                <ComboBox fx:id="stageFilterCombo" prefWidth="180" styleClass="animate-slide" />
+                <Button style="-fx-background-color: #C6A34F; -fx-text-fill: white;" text="Filtrer" />
             </HBox>
 
-            <TableView fx:id="table" prefHeight="500">
+            <!-- Table -->
+            <TableView fx:id="table" prefHeight="500.0" styleClass="animate-fade">
                 <columns>
-                    <TableColumn fx:id="workerNameCol" text="👤 Demandeur" prefWidth="180" />
-                    <TableColumn fx:id="dateCol" text="🗓️ Date de demande" prefWidth="150" />
-                    <TableColumn fx:id="motifCol" text="📝 Motif" prefWidth="280" />
-                    <TableColumn fx:id="statusCol" text="🚦 Statut" prefWidth="120" />
-                    <TableColumn fx:id="actionsCol" text="🛠 Actions" prefWidth="100" />
+                    <TableColumn fx:id="workerNameCol" prefWidth="180" text="👤 Demandeur" />
+                    <TableColumn fx:id="dateCol" prefWidth="150" text="🗓️ Période" />
+                    <TableColumn fx:id="motifCol" prefWidth="250" text="📝 Motif" />
+                    <TableColumn fx:id="statusCol" prefWidth="191.0" text="🚦 Statut" />
+                    <TableColumn fx:id="actionsCol" prefWidth="198.0" text="🛠 Actions">
+                        <styleClass>
+                            <String fx:value="action-box" />
+                        </styleClass>
+                    </TableColumn>
                 </columns>
             </TableView>
 
         </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #f5f0e6;">
+            <Label style="-fx-text-fill: #888888; -fx-font-size: 12px;" text="© 2023 United Service Company - Tunisie" />
+        </HBox>
+    </bottom>
 </BorderPane>

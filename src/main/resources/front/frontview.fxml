@@ -27,8 +27,12 @@
                     <Label fx:id="activePageLabel" styleClass="navbar-title"/>
 
                     <Region fx:id="navbarSpacer" HBox.hgrow="ALWAYS"/>
-                    <!-- ✅ Bouton Favoris -->
-                    <Button fx:id="notificationBtn" text="🔔" styleClass="notification-btn"/>
+                    <!-- ✅ Bouton Notification -->
+                    <StackPane>
+                        <Button fx:id="notificationBtn" text="🔔" styleClass="notification-btn"/>
+                        <Label fx:id="notificationBadge" styleClass="notification-badge"
+                               visible="false" StackPane.alignment="TOP_RIGHT"/>
+                    </StackPane>
 
                     <!-- 👇 Role Label -->
                     <Label fx:id="roleLabel" style="-fx-font-size: 12px; -fx-text-fill: #666;" />

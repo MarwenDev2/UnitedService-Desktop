@@ -176,18 +176,42 @@ public class AdminCongeManagementController implements Initializable {
             return;
         }
 
-        String comment = promptForComment(isApproved);
-        if (comment == null) return; // user cancelled
+        // --- Determine if this is the final step ---
+        boolean isFinalStep = (!isApproved) || (role == Role.ADMIN);
+        String comment = null;
 
-        // Create and save the decision
-        Decision decision = new Decision();
-        decision.setApproved(isApproved);
-        decision.setComment(comment);
-        decision.setDecisionBy(currentUser);
-        decision.setDate(LocalDateTime.now());
-        decisionService.add(decision);
+        if (isFinalStep) {
+            comment = promptForComment(isApproved);
+            if (comment == null) return; // user cancelled
+        }
 
-        // Send a notification to the demandeur
+        // --- Create decision only for final step (refused or final approval) ---
+        if (isFinalStep) {
+            Decision decision = new Decision();
+            decision.setApproved(isApproved);
+            decision.setComment(comment);
+            decision.setDecisionBy(currentUser);
+            decision.setDate(LocalDateTime.now());
+            decisionService.add(decision);
+
+            if (role == Role.ADMIN) {
+                service.finalApprove(demande.getId(), isApproved);
+            } else {
+                // refused at intermediate stage
+                switch (role) {
+                    case SECRETAIRE -> service.updateSecretaireStatus(demande.getId(), false);
+                    case RH -> service.updateRHStatus(demande.getId(), false);
+                }
+            }
+        } else {
+            // Intermediate approval (no decision saved)
+            switch (role) {
+                case SECRETAIRE -> service.updateSecretaireStatus(demande.getId(), true);
+                case RH -> service.updateRHStatus(demande.getId(), true);
+            }
+        }
+
+        // --- Notification message logic ---
         String notifMsg;
         if (!isApproved) {
             notifMsg = "Votre demande a été refusée par " + role.name() + " (" + currentUser.getName() + ")";
@@ -208,7 +232,6 @@ public class AdminCongeManagementController implements Initializable {
             }
         }
 
-
         Notification notification = new Notification();
         notification.setRecipient(demande.getWorker());
         notification.setMessage(notifMsg);
@@ -216,17 +239,9 @@ public class AdminCongeManagementController implements Initializable {
         notification.setRead(false);
         notificationService.add(notification);
 
-        // Update demande status and associate decision
-        switch (role) {
-            case SECRETAIRE -> service.updateSecretaireStatus(demande.getId(), isApproved);
-            case RH -> service.updateRHStatus(demande.getId(), isApproved);
-            case ADMIN -> service.finalApprove(demande.getId(), isApproved);
-        }
-
         loadTableData();
         loadStats();
     }
-
 
     private String promptForComment(boolean isApproved) {
         TextInputDialog dialog = new TextInputDialog();

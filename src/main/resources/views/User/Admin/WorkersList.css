@@ -1,0 +1,173 @@
+/* === Base Styles === */
+.root {
+    -fx-background-color: #0E0E0E;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* === Header Styles === */
+.header-box {
+    -fx-padding: 20;
+    -fx-background-color: #1A1A1A;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 40;
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-text-fill: #F2C14E;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.2, 0, 2);
+}
+
+.filter-box {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-padding: 0 20 0 0;
+}
+
+.filter-button {
+    -fx-background-color: #F2C14E;
+    -fx-text-fill: #000;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+.filter-button:hover {
+    -fx-background-color: #FFD700;
+}
+
+/* === Scroll Pane === */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+    -fx-fit-to-height: true;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* === Workers Container === */
+.workers-container {
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+    -fx-alignment: TOP_CENTER;
+    -fx-padding: 10;
+}
+
+/* === Worker Card === */
+.worker-card {
+    -fx-background-color: #1E1E1E;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #F2C14E;
+    -fx-border-width: 1.5;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0.2, 0, 3);
+    -fx-min-width: 280;
+    -fx-max-width: 280;
+    -fx-cursor: hand;
+}
+
+.worker-card:hover {
+    -fx-border-color: #FFD700;
+    -fx-effect: dropshadow(gaussian, #FFD70055, 15, 0.3, 0, 3);
+    -fx-translate-y: -5;
+}
+
+.card-header {
+    -fx-alignment: CENTER;
+    -fx-spacing: 10;
+}
+
+.worker-avatar {
+    -fx-effect: dropshadow(gaussian, #000000, 8, 0.3, 0, 2);
+}
+
+.worker-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F2C14E;
+    -fx-wrap-text: true;
+    -fx-text-alignment: CENTER;
+}
+
+.worker-position {
+    -fx-font-size: 14px;
+    -fx-text-fill: #AAAAAA;
+    -fx-font-style: italic;
+}
+
+.card-details {
+    -fx-spacing: 8;
+    -fx-padding: 10 0 0 0;
+}
+
+.detail-row {
+    -fx-spacing: 5;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.detail-icon {
+    -fx-text-fill: #F2C14E;
+    -fx-font-size: 14px;
+}
+
+.detail-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #DDDDDD;
+    -fx-wrap-text: true;
+}
+
+.status-badge {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
+    -fx-background-radius: 10;
+    -fx-text-fill: #000;
+}
+
+.status-active {
+    -fx-background-color: #A5D6A7;
+}
+
+.status-inactive {
+    -fx-background-color: #EF9A9A;
+}
+
+/* === Stats Box === */
+.stats-box {
+    -fx-padding: 15;
+    -fx-background-color: #1A1A1A;
+    -fx-alignment: CENTER;
+}
+
+.stat-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #F2C14E;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-color: #252525;
+    -fx-background-radius: 8;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+    from { -fx-opacity: 0; }
+    to { -fx-opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { -fx-translate-y: 20; -fx-opacity: 0; }
+    to { -fx-translate-y: 0; -fx-opacity: 1; }
+}
+
+.animate-fade {
+    -fx-animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide {
+    -fx-animation: slideIn 0.4s ease-out;
+}

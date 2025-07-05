@@ -122,7 +122,7 @@ public class ProfileController {
 
     // Navigation methods
     @FXML
-    private void loadDashboard() { loadScene("/views/User/Admin/Dashboard.fxml"); }
+    private void loadDashboard() { loadScene("/views/User/Admin/WorkersList.fxml"); }
 
     @FXML
     private void loadPosts() { loadScene("/views/Worker/WorkerDashboard.fxml"); }
