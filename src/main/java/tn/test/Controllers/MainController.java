@@ -3,50 +3,203 @@ package tn.test.Controllers;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tn.test.entities.Notification;
+import tn.test.entities.Role;
 import tn.test.entities.User;
+import tn.test.services.NotificationService;
 import tn.test.tools.SessionManager;
 
 public class MainController {
 
+    @FXML private Button demandeCongeButton;
+    @FXML private VBox usersSubmenuVBOX;
     @FXML private BorderPane rootLayout;
     @FXML private VBox sidebar;
     @FXML private AnchorPane mainContent;
     @FXML private ImageView profileImage;
-    @FXML private Label navTitle;
+    @FXML private Label navTitle, notificationBadge;
     @FXML private MenuButton profileMenu;
-    @FXML private Button btnDashboard, btnUsers, btnBlog, btnLogout, toggleSidebarBtn;
+    @FXML private Button btnDashboard, btnUsers, btnBlog, toggleSidebarBtn;
     @FXML private VBox usersSubmenu;
     @FXML private Button btnListWorkers, btnAddWorker;
-
-    private User currentUser = SessionManager.getInstance().getCurrentUser();
+    @FXML private Button notificationBtn;
+    private VBox notificationPopup;
+    private final User currentUser = SessionManager.getInstance().getCurrentUser();
     private boolean sidebarVisible = true;
     private boolean usersSubmenuVisible = false;
     private Button activeButton = null;
-
+    private final NotificationService notificationService = new NotificationService();
+    private Timeline notificationRefreshTimeline;
     public void initialize() {
         loadInitialPage();
         loadProfileImage();
         sidebar.setTranslateX(0);
         profileMenu.setText("👤 "+currentUser.getName());
+        if(currentUser.getRole().equals(Role.SECRETAIRE)){
+            usersSubmenuVBOX.setVisible(false);
+            demandeCongeButton.setVisible(true);
+        } else if (currentUser.getRole().equals(Role.RH)) {
+            btnAddWorker.setVisible(true);
+        }
+        setupNotificationButton();
+        updateNotificationBadge();
+        setupNotificationRefresh();
 
         // Set arrow icon for users button
         ImageView arrowIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/arrow-right.png")));
         arrowIcon.setFitHeight(12);
         arrowIcon.setFitWidth(12);
         btnUsers.setGraphic(arrowIcon);
+    }
+
+    private void setupNotificationButton() {
+        // Add tooltip
+        Tooltip tooltip = new Tooltip("Notifications");
+        tooltip.setStyle("-fx-font-size: 12px;");
+        notificationBtn.setTooltip(tooltip);
+
+        // Set action for notification button
+        notificationBtn.setOnAction(e -> toggleNotifications());
+
+        // Update badge when mouse enters (optional)
+        notificationBtn.setOnMouseEntered(e -> updateNotificationBadge());
+    }
+
+    private void updateNotificationBadge() {
+        int unreadCount = notificationService.countUnreadForDashboard();
+
+        if (unreadCount > 0) {
+            notificationBadge.setText(unreadCount > 9 ? "9+" : String.valueOf(unreadCount));
+            notificationBadge.setVisible(true);
+
+            // Add pulse animation when there are new notifications
+            ScaleTransition pulse = new ScaleTransition(Duration.millis(300), notificationBadge);
+            pulse.setFromX(1);
+            pulse.setToX(1.3);
+            pulse.setFromY(1);
+            pulse.setToY(1.3);
+            pulse.setCycleCount(2);
+            pulse.setAutoReverse(true);
+            pulse.play();
+        } else {
+            notificationBadge.setVisible(false);
+        }
+    }
+
+    private void setupNotificationRefresh() {
+        // Refresh notifications every 30 seconds
+        notificationRefreshTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(30), e -> updateNotificationBadge())
+        );
+        notificationRefreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        notificationRefreshTimeline.play();
+    }
+
+    private void toggleNotifications() {
+        // Hide if already showing
+        if (notificationPopup != null && mainContent.getChildren().contains(notificationPopup)) {
+            mainContent.getChildren().remove(notificationPopup);
+            return;
+        }
+
+        // Get notifications from service
+        List<Notification> notifications = notificationService.findAllForDashboard();
+
+
+        // Create notification popup
+        notificationPopup = new VBox();
+        notificationPopup.getStyleClass().add("notification-popup");
+        notificationPopup.setSpacing(10);
+        notificationPopup.setPadding(new Insets(10));
+        notificationPopup.setMaxWidth(320);
+        notificationPopup.setLayoutX(mainContent.getWidth() - 350);
+        notificationPopup.setLayoutY(60);
+
+        // Add title
+        Label title = new Label("Notifications");
+        title.getStyleClass().add("notification-title");
+        notificationPopup.getChildren().add(title);
+
+        // Add notifications or empty message
+        if (notifications.isEmpty()) {
+            Label empty = new Label("Aucune notification");
+            empty.getStyleClass().add("notification-empty");
+            notificationPopup.getChildren().add(empty);
+        } else {
+            for (Notification n : notifications) {
+                HBox card = createNotificationCard(n);
+                notificationPopup.getChildren().add(card);
+            }
+        }
+
+        // Close when mouse exits
+        notificationPopup.setOnMouseExited(e -> mainContent.getChildren().remove(notificationPopup));
+        mainContent.getChildren().add(notificationPopup);
+    }
+
+    private HBox createNotificationCard(Notification notification) {
+        HBox card = new HBox();
+        card.setSpacing(10);
+        card.getStyleClass().add("notification-card");
+
+        // Highlight unread notifications
+        if (!notification.isRead()) {
+            card.setStyle("-fx-background-color: #E3F2FD;");
+        } else {
+            card.setStyle("-fx-background-color: #F5F5F5;");
+        }
+
+        // Notification message
+        Label message = new Label(notification.getMessage());
+        message.getStyleClass().add("notification-message");
+        message.setWrapText(true);
+        message.setMaxWidth(230);
+
+        // Mark as read button
+        Button markRead = new Button("✔");
+        markRead.getStyleClass().add("notification-mark-read");
+        markRead.setOnAction(e -> handleMarkAsRead(notification, card));
+
+        card.getChildren().addAll(message, markRead);
+        return card;
+    }
+
+    private void handleMarkAsRead(Notification notification, HBox card) {
+        if (!notification.isRead()) {
+            // Mark as read in database
+            notificationService.markAsRead(notification.getId());
+            notification.setRead(true);
+
+            // Update UI
+            card.setStyle("-fx-background-color: #F5F5F5;");
+
+            // Add visual feedback
+            FadeTransition fade = new FadeTransition(Duration.millis(300), card);
+            fade.setFromValue(1.0);
+            fade.setToValue(0.7);
+            fade.setCycleCount(2);
+            fade.setAutoReverse(true);
+            fade.play();
+
+            // Update badge count
+            updateNotificationBadge();
+        }
     }
 
     @FXML
@@ -87,6 +240,26 @@ public class MainController {
         setNavTitle("🏠 Dashboard");
         loadPage("/views/Worker/WorkerDashboard.fxml");
         setActive(btnDashboard);
+    }
+    @FXML
+    private void goToDashboard() {
+        setNavTitle("🏠 Dashboard");
+        loadPage("/views/Worker/WorkerDashboard.fxml");
+        setActive(btnDashboard);
+    }
+
+    @FXML
+    private void goToDemandes() {
+        setNavTitle("📋 Demandes Congés");
+        loadPage("/views/User/Admin/AdminConge.fxml");
+        setActive(btnBlog);
+    }
+
+    @FXML
+    private void goToDemandeConge() {
+        setNavTitle("📋 Postuler demande un congé");
+        loadPage("/views/Worker/PostulerConge.fxml");
+        setActive(demandeCongeButton);
     }
 
     private void loadProfileImage() {
@@ -164,25 +337,6 @@ public class MainController {
         navTitle.setText(title);
     }
 
-    @FXML
-    private void goToDashboard() {
-        setNavTitle("🏠 Dashboard");
-        loadPage("/views/Worker/WorkerDashboard.fxml");
-        setActive(btnDashboard);
-    }
-
-    @FXML
-    private void goToDemandes() {
-        setNavTitle("📋 Demandes Congés");
-        loadPage("/views/User/Admin/AdminConge.fxml");
-        setActive(btnBlog);
-    }
-
-    @FXML
-    private void goToProfile() {
-        setNavTitle(" Profile");
-        loadPage("/views/User/Profile/Profile.fxml");
-    }
 
     @FXML
     private void goToLogout() {

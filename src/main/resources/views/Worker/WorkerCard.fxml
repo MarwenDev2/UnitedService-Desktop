@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<StackPane stylesheets="@worker-popup.css" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.test.Controllers.Worker.WorkerCardController"
+           styleClass="popup-container">
+
+    <VBox spacing="15" alignment="CENTER" styleClass="worker-card">
+        <HBox spacing="10" styleClass="card-header">
+            <ImageView fx:id="avatarImage" fitWidth="80" fitHeight="80" styleClass="worker-avatar"/>
+            <VBox spacing="5">
+                <Label fx:id="nameLabel" styleClass="worker-name"/>
+                <Label fx:id="positionLabel" styleClass="worker-position"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="8" styleClass="card-details">
+            <HBox spacing="5" styleClass="detail-row">
+                <Label text="📞"/>
+                <Label fx:id="phoneLabel"/>
+            </HBox>
+            <HBox spacing="5" styleClass="detail-row">
+                <Label text="✉️"/>
+                <Label fx:id="emailLabel"/>
+            </HBox>
+            <HBox spacing="5" styleClass="detail-row">
+                <Label text="🏢"/>
+                <Label fx:id="departmentLabel"/>
+            </HBox>
+            <HBox spacing="5" styleClass="detail-row">
+                <Label text="📅"/>
+                <Label fx:id="hireDateLabel"/>
+            </HBox>
+            <HBox spacing="5" styleClass="detail-row">
+                <Label text="💰"/>
+                <Label fx:id="salaryLabel"/>
+            </HBox>
+            <HBox spacing="5" styleClass="detail-row">
+                <Label fx:id="statusBadge"/>
+            </HBox>
+        </VBox>
+
+        <Button text="Fermer" onAction="#handleClose" styleClass="btn-close"/>
+    </VBox>
+</StackPane>

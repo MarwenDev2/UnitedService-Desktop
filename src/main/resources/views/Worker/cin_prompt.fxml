@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.test.Controllers.Worker.CinPromptController"
+      prefWidth="450" prefHeight="300"
+      styleClass="cin-modal"
+      stylesheets="@cin_prompt.css">
+
+    <!-- Header with icon -->
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="modal-header">
+        <ImageView fitWidth="24" fitHeight="24">
+            <Image url="@/Images/id-card.gif" />
+        </ImageView>
+        <Label text="Identification de l'employé" styleClass="modal-title" />
+    </HBox>
+
+    <Separator styleClass="header-separator" />
+
+    <!-- Main content -->
+    <VBox spacing="20" styleClass="modal-content">
+        <Label text="Veuillez entrer le CIN de l'employé" styleClass="instruction-text" />
+
+        <TextField fx:id="cinField" styleClass="cin-input" promptText="Numéro CIN" />
+        <Label fx:id="errorLabel" styleClass="cin-error" visible="false" />
+
+        <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+            <Button text="Valider" fx:id="confirmButton" styleClass="primary-button" />
+            <Button text="Annuler" fx:id="cancelButton" styleClass="secondary-button" />
+        </HBox>
+    </VBox>
+</VBox>

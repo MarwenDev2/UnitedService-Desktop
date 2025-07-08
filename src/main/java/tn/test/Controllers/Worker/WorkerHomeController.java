@@ -66,19 +66,18 @@ public class WorkerHomeController {
     private String getStatusIcon(Status status) {
         return switch (status) {
             case ACCEPTE -> "✅";
-            case REFUSE_ADMIN, REFUSE_RH, REFUSE_SECRETAIRE -> "❌";
-            case EN_ATTENTE_ADMIN, EN_ATTENTE_RH, EN_ATTENTE_SECRETAIRE -> "⏳";
+            case REFUSE_ADMIN, REFUSE_RH -> "❌";
+            case EN_ATTENTE_ADMIN, EN_ATTENTE_RH -> "⏳";
             default -> "📌";
         };
     }
 
     private String formatStatus(Status status) {
         return switch (status) {
-            case EN_ATTENTE_SECRETAIRE -> "En attente (Secrétaire)";
             case EN_ATTENTE_RH -> "En attente (RH)";
             case EN_ATTENTE_ADMIN -> "En attente (Admin)";
             case ACCEPTE -> "Approuvée";
-            case REFUSE_ADMIN, REFUSE_RH, REFUSE_SECRETAIRE -> "Rejetée";
+            case REFUSE_ADMIN, REFUSE_RH -> "Rejetée";
             default -> status.name();
         };
     }

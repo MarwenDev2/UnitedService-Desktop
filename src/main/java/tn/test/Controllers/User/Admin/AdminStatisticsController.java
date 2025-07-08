@@ -42,11 +42,9 @@ public class AdminStatisticsController implements Initializable {
     private void loadStatusStats() {
         int total = demandeService.countAll();
         int accepted = demandeService.countByStatus(Status.ACCEPTE);
-        int refused = demandeService.countByStatus(Status.REFUSE_SECRETAIRE)
-                + demandeService.countByStatus(Status.REFUSE_RH)
+        int refused = demandeService.countByStatus(Status.REFUSE_RH)
                 + demandeService.countByStatus(Status.REFUSE_ADMIN);
-        int pending = demandeService.countByStatus(Status.EN_ATTENTE_SECRETAIRE)
-                + demandeService.countByStatus(Status.EN_ATTENTE_RH)
+        int pending = demandeService.countByStatus(Status.EN_ATTENTE_RH)
                 + demandeService.countByStatus(Status.EN_ATTENTE_ADMIN);
 
         totalDemandesLabel.setText("Total des demandes : " + total);
@@ -104,14 +102,5 @@ public class AdminStatisticsController implements Initializable {
         fade.setFromValue(0);
         fade.setToValue(1);
         fade.play();
-    }
-
-    public void backToDashboard() {
-        try {
-            Stage stage = (Stage) rootContainer.getScene().getWindow();
-            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/WorkerDashboard.fxml"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

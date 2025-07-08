@@ -24,8 +24,8 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
     public boolean add(DemandeConge demande) {
         String sql = """
     INSERT INTO demande_conge (worker_id, start_date, end_date, type, reason, status,
-    secretaire_decision_id, rh_decision_id, admin_decision_id, date_demande)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    secretaire_decision_id, rh_decision_id, admin_decision_id, date_demande, attachment_path)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -35,12 +35,11 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             stmt.setString(4, demande.getType().name());
             stmt.setString(5, demande.getReason());
             stmt.setString(6, demande.getStatus().name());
-
             stmt.setObject(7, demande.getSecretaireDecision() != null ? demande.getSecretaireDecision().getId() : null, Types.INTEGER);
             stmt.setObject(8, demande.getRhDecision() != null ? demande.getRhDecision().getId() : null, Types.INTEGER);
             stmt.setObject(9, demande.getAdminDecision() != null ? demande.getAdminDecision().getId() : null, Types.INTEGER);
             stmt.setObject(10, demande.getDateDemande() != null ? Date.valueOf(demande.getDateDemande()) : null, Types.DATE);
-
+            stmt.setString(11, demande.getAttachmentPath());
 
             int rowsInserted = stmt.executeUpdate();
             System.out.println("✅ DemandeConge added.");
@@ -51,14 +50,13 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         }
     }
 
-
     @Override
     public void update(DemandeConge demande) {
         String sql = """
-        UPDATE demande_conge SET worker_id = ?, start_date = ?, end_date = ?, type = ?, reason = ?, status = ?, 
-        secretaire_decision_id = ?, rh_decision_id = ?, admin_decision_id = ?, date_demande = ? WHERE id = ?
+    UPDATE demande_conge SET worker_id = ?, start_date = ?, end_date = ?, type = ?, reason = ?, status = ?, 
+    secretaire_decision_id = ?, rh_decision_id = ?, admin_decision_id = ?, date_demande = ?, attachment_path = ?
+    WHERE id = ?
     """;
-
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, demande.getWorker().getId());
@@ -67,12 +65,12 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             stmt.setString(4, demande.getType().name());
             stmt.setString(5, demande.getReason());
             stmt.setString(6, demande.getStatus().name());
-
             stmt.setObject(7, demande.getSecretaireDecision() != null ? demande.getSecretaireDecision().getId() : null, Types.INTEGER);
             stmt.setObject(8, demande.getRhDecision() != null ? demande.getRhDecision().getId() : null, Types.INTEGER);
             stmt.setObject(9, demande.getAdminDecision() != null ? demande.getAdminDecision().getId() : null, Types.INTEGER);
             stmt.setObject(10, demande.getDateDemande() != null ? Date.valueOf(demande.getDateDemande()) : null, Types.DATE);
-            stmt.setInt(11, demande.getId());
+            stmt.setString(11, demande.getAttachmentPath());
+            stmt.setInt(12, demande.getId());
 
             stmt.executeUpdate();
             System.out.println("✅ DemandeConge updated.");
@@ -281,7 +279,7 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, workerId);
-            stmt.setString(2, Status.EN_ATTENTE_SECRETAIRE.name());
+            stmt.setString(2, Status.EN_ATTENTE_RH.name());
             stmt.setString(3, Status.EN_ATTENTE_ADMIN.name());
 
             ResultSet rs = stmt.executeQuery();
@@ -306,11 +304,6 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    public void updateSecretaireStatus(int demandeId, boolean isApproved) {
-        Status newStatus = isApproved ? Status.EN_ATTENTE_RH : Status.REFUSE_SECRETAIRE;
-        updateStatus(demandeId, newStatus);
     }
 
     public void updateRHStatus(int demandeId, boolean isApproved) {
@@ -371,6 +364,7 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
         d.setWorker(workerService.findById(rs.getInt("worker_id")));
         d.setStartDate(rs.getDate("start_date").toLocalDate());
         d.setEndDate(rs.getDate("end_date").toLocalDate());
+        d.setAttachmentPath(rs.getString("attachment_path"));
 
         // 🛠️ Safe mapping from DB string to Enum
         String dbType = rs.getString("type").toUpperCase();
@@ -391,7 +385,7 @@ public class DemandeCongeService implements CrudService<DemandeConge> {
             d.setStatus(Status.valueOf(dbStatus));
         } catch (IllegalArgumentException e) {
             System.err.println("❌ Unknown status: " + dbStatus);
-            d.setStatus(Status.EN_ATTENTE_SECRETAIRE); // default fallback
+            d.setStatus(Status.EN_ATTENTE_RH); // default fallback
         }
 
         int secId = rs.getInt("secretaire_decision_id");

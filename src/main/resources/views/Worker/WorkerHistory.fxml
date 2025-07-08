@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.test.Controllers.Worker.LeaveHistoryController"
+      prefWidth="900" prefHeight="650"
+      styleClass="leave-history-modal"
+      stylesheets="@leave_history.css">
+
+    <!-- Header with worker info -->
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="modal-header">
+        <ImageView fitWidth="60" fitHeight="60" styleClass="worker-avatar" fx:id="workerAvatar" />
+
+        <VBox spacing="5">
+            <Label fx:id="workerNameLabel" styleClass="worker-name" />
+            <Label fx:id="workerPositionLabel" styleClass="worker-position" />
+        </VBox>
+
+        <!-- Statistics -->
+        <HBox spacing="20" styleClass="stats-container">
+            <VBox alignment="CENTER" spacing="3" styleClass="stat-box">
+                <Label text="Total" styleClass="stat-title" />
+                <Label fx:id="totalLeaveLabel" styleClass="stat-value" />
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="3" styleClass="stat-box">
+                <Label text="Approuvés" styleClass="stat-title" />
+                <Label fx:id="approvedLabel" styleClass="stat-value" />
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="3" styleClass="stat-box">
+                <Label text="En Attente" styleClass="stat-title" />
+                <Label fx:id="pendingLabel" styleClass="stat-value " />
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="3" styleClass="stat-box">
+                <Label text="Refusés" styleClass="stat-title" />
+                <Label fx:id="rejectedLabel" styleClass="stat-value " />
+            </VBox>
+        </HBox>
+    </HBox>
+
+    <Separator styleClass="header-separator" />
+
+    <!-- Filter controls -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-container">
+        <Label text="Filtrer:" styleClass="filter-label" />
+
+        <VBox spacing="5">
+            <Label text="Année" styleClass="filter-sub-label" />
+            <ComboBox fx:id="yearFilter" styleClass="filter-combo" />
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Type" styleClass="filter-sub-label" />
+            <ComboBox fx:id="typeFilter" styleClass="filter-combo" />
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Statut" styleClass="filter-sub-label" />
+            <ComboBox fx:id="statusFilter" styleClass="filter-combo" />
+        </VBox>
+    </HBox>
+
+    <!-- Leave history table -->
+    <TableView fx:id="leaveTable" styleClass="leave-table">
+        <placeholder>
+            <Label text="Aucun historique de congé trouvé" styleClass="table-placeholder" />
+        </placeholder>
+    </TableView>
+
+    <!-- Footer with close button -->
+    <HBox alignment="CENTER_RIGHT" styleClass="footer-container">
+        <Button text="Exporter PDF" styleClass="export-button" onAction="#handleExportPDF" />
+        <Button text="Fermer" styleClass="close-button" onAction="#handleClose" />
+    </HBox>
+</VBox>

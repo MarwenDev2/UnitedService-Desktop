@@ -1,0 +1,133 @@
+/* Base modal styling */
+.cin-modal {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-border-color: #e0e0e0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 20, 0.2, 0, 5);
+    -fx-padding: 25px 30px;
+    -fx-spacing: 0;
+}
+
+/* Header styles */
+.modal-header {
+    -fx-padding: 0 0 15px 0;
+}
+
+.modal-title {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.header-separator {
+    -fx-padding: 0 0 20px 0;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* Content area */
+.modal-content {
+    -fx-spacing: 20px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+}
+
+.instruction-text {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 15px;
+    -fx-text-fill: #34495e;
+    -fx-wrap-text: true;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+/* Input field styling */
+.cin-input {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+    -fx-padding: 10px 15px;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1px;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-prompt-text-fill: #7f8c8d;
+}
+
+.cin-input:focused {
+    -fx-border-color: #3498db;
+    -fx-background-color: #ffffff;
+    -fx-effect: innershadow(gaussian, rgba(52, 152, 219, 0.2), 10, 0, 0, 0);
+}
+
+/* Error message styling */
+.cin-error {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-padding: 5px 0 0 0;
+}
+
+/* Button container */
+.button-container {
+    -fx-padding: 15px 0 0 0;
+}
+
+/* Primary button (Valider) */
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #3498db, #2980b9);
+    -fx-text-fill: white;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 38px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.3), 8, 0.2, 0, 2);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #3da5e0, #2c8fd1);
+}
+
+.primary-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #2980b9, #2472a4);
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.3), 4, 0.1, 0, 1);
+}
+
+/* Secondary button (Annuler) */
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 38px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #34495e;
+}
+
+.secondary-button:pressed {
+    -fx-background-color: #ecf0f1;
+}

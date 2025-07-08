@@ -4,16 +4,22 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import tn.test.Controllers.Worker.WorkerCardController;
 import tn.test.entities.*;
 import tn.test.services.DecisionService;
 import tn.test.services.DemandeCongeService;
 import tn.test.services.NotificationService;
 import tn.test.tools.SessionManager;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +39,7 @@ public class AdminCongeManagementController implements Initializable {
     @FXML private TableView<DemandeConge> table;
     @FXML private TableColumn<DemandeConge, String> workerNameCol;
     @FXML private TableColumn<DemandeConge, String> dateCol;
+    @FXML private TableColumn<DemandeConge, String> durationCol;
     @FXML private TableColumn<DemandeConge, String> motifCol;
     @FXML private TableColumn<DemandeConge, String> statusCol;
     @FXML private TableColumn<DemandeConge, Void> actionsCol;
@@ -43,6 +50,7 @@ public class AdminCongeManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         setupTable();
         setupFilters();
         loadTableData();
@@ -51,22 +59,74 @@ public class AdminCongeManagementController implements Initializable {
         welcomeLabel.setText("Bienvenue, " + currentUser.getName());
     }
 
+    private String formatStatus(Status status) {
+        return switch (status) {
+            case EN_ATTENTE_RH -> "En attente RH";
+            case EN_ATTENTE_ADMIN -> "En attente Directeur";
+            case REFUSE_RH -> "Refusé par RH";
+            case REFUSE_ADMIN -> "Refusé par Directeur";
+            case ACCEPTE -> "Acceptée";
+            default -> status.name(); // fallback (in case of unknown or deprecated values)
+        };
+    }
+
+    private String displayStatus(String value) {
+        return switch (value) {
+            case "EN_ATTENTE_RH" -> "En attente RH";
+            case "EN_ATTENTE_ADMIN" -> "En attente Directeur";
+            case "ACCEPTE" -> "Acceptée";
+            case "REFUSE_RH" -> "Refusé RH";
+            case "REFUSE_ADMIN" -> "Refusé Directeur";
+            case "TOUS" -> "Tous";
+            default -> value;
+        };
+    }
+
+    private String displayStage(String value) {
+        return switch (value.toUpperCase()) {
+            case "ADMIN" -> "Directeur";
+            case "RH" -> "RH";
+            case "TOUS" -> "Tous";
+            default -> value;
+        };
+    }
+    private <T> void centerColumn(TableColumn<T, String> column) {
+        column.setStyle("-fx-alignment: CENTER;");
+    }
+
+
     private void setupTable() {
         workerNameCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getWorker().getName()));
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("dateDemande"));
+        dateCol.setCellValueFactory(cellData -> {
+            DemandeConge d = cellData.getValue();
+            String periode = d.getStartDate() + " - " + d.getEndDate();
+            return new SimpleStringProperty(periode);
+        });
+
+        durationCol.setCellValueFactory(cellData -> {
+            DemandeConge d = cellData.getValue();
+            long days = java.time.temporal.ChronoUnit.DAYS.between(d.getStartDate(), d.getEndDate()) + 1;
+            return new SimpleStringProperty(days + " jours");
+        });
         motifCol.setCellValueFactory(new PropertyValueFactory<>("reason"));
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        statusCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(formatStatus(cellData.getValue().getStatus())));
+
 
         actionsCol.setCellFactory(param -> new TableCell<>() {
             private final Button approveBtn = new Button("✔");
             private final Button refuseBtn = new Button("✖");
-            private final HBox actionBox = new HBox(approveBtn, refuseBtn);
+            private final Button viewBtn = new Button("👁");
+            private final HBox actionBox = new HBox(viewBtn, approveBtn, refuseBtn);
 
             {
                 actionBox.setSpacing(10);
+                actionBox.getStyleClass().add("action-box");
+
                 approveBtn.getStyleClass().add("btn-approve");
                 refuseBtn.getStyleClass().add("btn-refuse");
+                viewBtn.getStyleClass().add("btn-view");
 
                 approveBtn.setOnAction(e -> {
                     DemandeConge demande = getTableView().getItems().get(getIndex());
@@ -76,6 +136,11 @@ public class AdminCongeManagementController implements Initializable {
                 refuseBtn.setOnAction(e -> {
                     DemandeConge demande = getTableView().getItems().get(getIndex());
                     handleApproval(demande, false);
+                });
+
+                viewBtn.setOnAction(e -> {
+                    DemandeConge demande = getTableView().getItems().get(getIndex());
+                    showWorkerDetails(demande.getWorker());
                 });
             }
 
@@ -89,35 +154,84 @@ public class AdminCongeManagementController implements Initializable {
                 }
 
                 DemandeConge demande = getTableView().getItems().get(getIndex());
-                boolean showButtons = false;
+                boolean showButtons = switch (currentUser.getRole()) {
+                    case RH -> demande.getStatus() == Status.EN_ATTENTE_RH;
+                    case ADMIN -> demande.getStatus() == Status.EN_ATTENTE_ADMIN;
+                    default -> false;
+                };
 
-                // Display buttons only if the demande is at the correct stage for the user's role
-                switch (currentUser.getRole()) {
-                    case SECRETAIRE -> showButtons = demande.getStatus() == Status.EN_ATTENTE_SECRETAIRE;
-                    case RH -> showButtons = demande.getStatus() == Status.EN_ATTENTE_RH;
-                    case ADMIN -> showButtons = demande.getStatus() == Status.EN_ATTENTE_ADMIN;
-                }
-
-                setGraphic(showButtons ? actionBox : null);
+                setGraphic(showButtons ? actionBox : new HBox(viewBtn)); // Always show view
             }
-
         });
+
+        centerColumn(workerNameCol);
+        centerColumn(dateCol);
+        centerColumn(durationCol);
+        centerColumn(motifCol);
+        centerColumn(statusCol);
+
+    }
+
+    private void showWorkerDetails(Worker worker) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Worker/WorkerCard.fxml"));
+            Parent root = loader.load();
+
+            WorkerCardController controller = loader.getController();
+            controller.setWorker(worker);
+
+            Stage popup = new Stage();
+            Scene scene = new Scene(root, 600, 400);
+
+            popup.setTitle("Détails du salarié");
+            popup.setScene(scene);
+            popup.setResizable(false);
+            popup.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    private void setupFilters() {
-        statusFilterCombo.setItems(FXCollections.observableArrayList(
-                "TOUS",
-                "EN_ATTENTE_SECRETAIRE",
-                "EN_ATTENTE_RH",
-                "EN_ATTENTE_ADMIN",
-                "ACCEPTE",
-                "REFUSE_SECRETAIRE",
-                "REFUSE_RH",
-                "REFUSE_ADMIN"
-        ));
 
-        stageFilterCombo.setItems(FXCollections.observableArrayList("TOUS", "SECRETAIRE", "RH", "ADMIN"));
+    private void setupFilters() {
+        ObservableList<String> statusOptions = FXCollections.observableArrayList(
+                "TOUS", "EN_ATTENTE_RH", "EN_ATTENTE_ADMIN", "ACCEPTE", "REFUSE_RH", "REFUSE_ADMIN"
+        );
+        statusFilterCombo.setItems(statusOptions);
+
+        statusFilterCombo.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : displayStatus(item));
+            }
+        });
+        statusFilterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : displayStatus(item));
+            }
+        });
+
+        ObservableList<String> stageOptions = FXCollections.observableArrayList("TOUS", "RH", "ADMIN");
+        stageFilterCombo.setItems(stageOptions);
+
+        stageFilterCombo.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : displayStage(item));
+            }
+        });
+        stageFilterCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : displayStage(item));
+            }
+        });
 
         statusFilterCombo.setValue("TOUS");
         stageFilterCombo.setValue("TOUS");
@@ -125,6 +239,8 @@ public class AdminCongeManagementController implements Initializable {
         statusFilterCombo.setOnAction(e -> loadTableData());
         stageFilterCombo.setOnAction(e -> loadTableData());
     }
+
+
 
     private void loadTableData() {
         List<DemandeConge> data = service.findAll();
@@ -144,27 +260,22 @@ public class AdminCongeManagementController implements Initializable {
 
     private void loadStats() {
         int total = service.countAll();
-        int enAttente = service.countByStatus(Status.EN_ATTENTE_SECRETAIRE)
-                + service.countByStatus(Status.EN_ATTENTE_RH)
+        int enAttente = service.countByStatus(Status.EN_ATTENTE_RH)
                 + service.countByStatus(Status.EN_ATTENTE_ADMIN);
-
         int accepte = service.countByStatus(Status.ACCEPTE);
-
-        int refuse = service.countByStatus(Status.REFUSE_SECRETAIRE)
-                + service.countByStatus(Status.REFUSE_RH)
+        int refuse = service.countByStatus(Status.REFUSE_RH)
                 + service.countByStatus(Status.REFUSE_ADMIN);
-
 
         pendingLabel.setText("En attente: " + enAttente);
         acceptedLabel.setText("Acceptées: " + accepte);
         refusedLabel.setText("Refusées: " + refuse);
     }
 
+
     private void handleApproval(DemandeConge demande, boolean isApproved) {
         Role role = currentUser.getRole();
 
         boolean validStep = switch (role) {
-            case SECRETAIRE -> demande.getStatus() == Status.EN_ATTENTE_SECRETAIRE;
             case RH -> demande.getStatus() == Status.EN_ATTENTE_RH;
             case ADMIN -> demande.getStatus() == Status.EN_ATTENTE_ADMIN;
             default -> false;
@@ -196,41 +307,33 @@ public class AdminCongeManagementController implements Initializable {
 
             if (role == Role.ADMIN) {
                 service.finalApprove(demande.getId(), isApproved);
-            } else {
-                // refused at intermediate stage
-                switch (role) {
-                    case SECRETAIRE -> service.updateSecretaireStatus(demande.getId(), false);
-                    case RH -> service.updateRHStatus(demande.getId(), false);
-                }
+            } else if (role == Role.RH) {
+                service.updateRHStatus(demande.getId(), false);
             }
         } else {
-            // Intermediate approval (no decision saved)
-            switch (role) {
-                case SECRETAIRE -> service.updateSecretaireStatus(demande.getId(), true);
-                case RH -> service.updateRHStatus(demande.getId(), true);
+            if (role == Role.RH) {
+                service.updateRHStatus(demande.getId(), true);
             }
         }
 
         // --- Notification message logic ---
         String notifMsg;
+        String fullName = demande.getWorker().getName();
+        String dateRange = "du " + demande.getStartDate() + " au " + demande.getEndDate();
+
         if (!isApproved) {
-            notifMsg = "Votre demande a été refusée par " + role.name() + " (" + currentUser.getName() + ")";
+            notifMsg = "❌ La demande de congé " + dateRange + " de " + fullName +
+                    " a été refusée par " + displayRole(role) + " (" + currentUser.getName() + ")";
         } else {
             if (role == Role.ADMIN) {
-                notifMsg = "🎉 Votre demande de congé a été définitivement acceptée.";
+                notifMsg = "✅ La demande de congé " + dateRange + " de " + fullName + " a été approuvée définitivement.";
             } else {
-                Role nextRole = switch (role) {
-                    case SECRETAIRE -> Role.RH;
-                    case RH -> Role.ADMIN;
-                    default -> null;
-                };
-
-                notifMsg = "Votre demande a été validée par " + role.name() + " (" + currentUser.getName() + ")";
-                if (nextRole != null) {
-                    notifMsg += ". En attente de la décision de " + nextRole.name();
-                }
+                notifMsg = "✔ La demande de congé " + dateRange + " de " + fullName +
+                        " a été validée par " + displayRole(role) + " (" + currentUser.getName() + ")" +
+                        ". En attente de validation du Directeur.";
             }
         }
+
 
         Notification notification = new Notification();
         notification.setRecipient(demande.getWorker());
@@ -243,14 +346,37 @@ public class AdminCongeManagementController implements Initializable {
         loadStats();
     }
 
+    private String displayRole(Role role) {
+        return switch (role) {
+            case ADMIN -> "Directeur";
+            case RH -> "RH";
+            default -> role.name();
+        };
+    }
+
     private String promptForComment(boolean isApproved) {
+        Alert choiceAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        choiceAlert.setTitle("Commentaire");
+        choiceAlert.setHeaderText(isApproved ? "Souhaitez-vous ajouter un commentaire à l'approbation ?" :
+                "Souhaitez-vous ajouter un commentaire au refus ?");
+        choiceAlert.setContentText("Choisissez une option :");
+
+        ButtonType ouiBtn = new ButtonType("Oui");
+        ButtonType nonBtn = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        choiceAlert.getButtonTypes().setAll(ouiBtn, nonBtn);
+
+        var result = choiceAlert.showAndWait();
+        if (result.isEmpty() || result.get() == nonBtn) return null;
+
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Ajouter un commentaire");
-        dialog.setHeaderText(isApproved ? "Valider la demande" : "Refuser la demande");
+        dialog.setHeaderText("Saisissez votre commentaire ci-dessous :");
         dialog.setContentText("Commentaire :");
 
-        return dialog.showAndWait().orElse(null);
+        return dialog.showAndWait().orElse("");
     }
+
 
 
 }

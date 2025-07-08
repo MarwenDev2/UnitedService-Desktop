@@ -14,14 +14,13 @@ public class DemandeConge {
     private Decision rhDecision;
     private Decision adminDecision;
     private LocalDate dateDemande;
+    private String attachmentPath;
 
     public DemandeConge() {
         // Default constructor
     }
 
-    public DemandeConge(int id, Worker worker, LocalDate startDate, LocalDate endDate, TypeConge type,
-                        String reason, Status status, Decision secretaireDecision,
-                        Decision rhDecision, Decision adminDecision, LocalDate dateDemande) {
+    public DemandeConge(int id, Worker worker, LocalDate startDate, LocalDate endDate, TypeConge type, String reason, Status status, Decision secretaireDecision, Decision rhDecision, Decision adminDecision, LocalDate dateDemande, String attachmentPath) {
         this.id = id;
         this.worker = worker;
         this.startDate = startDate;
@@ -33,8 +32,8 @@ public class DemandeConge {
         this.rhDecision = rhDecision;
         this.adminDecision = adminDecision;
         this.dateDemande = dateDemande;
+        this.attachmentPath = attachmentPath;
     }
-
 
     public int getId() {
         return id;
@@ -124,10 +123,16 @@ public class DemandeConge {
         this.adminDecision = adminDecision;
     }
 
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
 
     public String getCurrentStage() {
         switch (status) {
-            case EN_ATTENTE_SECRETAIRE, REFUSE_SECRETAIRE : return "SECRETAIRE";
             case EN_ATTENTE_RH, REFUSE_RH : return "RH";
             case EN_ATTENTE_ADMIN, REFUSE_ADMIN : return "ADMIN";
             case ACCEPTE : return "TERMINE";

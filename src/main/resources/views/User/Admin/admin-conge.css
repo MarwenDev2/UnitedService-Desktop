@@ -105,7 +105,7 @@
 
 .table-view .column-header .label {
     -fx-text-fill: #5a5a5a;
-    -fx-alignment: CENTER_LEFT;
+    -fx-alignment: center;
     -fx-padding: 0 0 0 15;
 }
 
@@ -216,4 +216,21 @@
 
 .pulse-effect:hover {
     -fx-effect: dropshadow(gaussian, rgba(198,163,79,0.6), 15, 0.6, 0, 0);
+}
+
+.action-box {
+    -fx-alignment: center-left;
+}
+
+.btn-view {
+    -fx-background-color: #e0f7fa;
+    -fx-text-fill: #00796b;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+}
+
+.worker-dialog .content {
+    -fx-font-size: 14px;
+    -fx-padding: 15px;
 }

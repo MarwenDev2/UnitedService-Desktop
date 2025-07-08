@@ -46,7 +46,7 @@
             </GridPane>
 
             <!-- Quick Actions -->
-            <HBox alignment="CENTER" spacing="30" styleClass="animate-fade">
+            <HBox fx:id="btnStatistic" alignment="CENTER" spacing="30" styleClass="animate-fade">
                 <Button text="📊 Statistiques" onAction="#goToStats" styleClass="button"/>
             </HBox>
 

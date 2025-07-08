@@ -10,7 +10,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="861.0" prefWidth="1070.0" stylesheets="@admin-conge.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.test.Controllers.User.Admin.AdminCongeManagementController">
+<BorderPane prefHeight="861.0" prefWidth="1070.0" stylesheets="@admin-conge.css"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.test.Controllers.User.Admin.AdminCongeManagementController">
 
     <top>
         <VBox spacing="10" style="-fx-padding: 25 35 15 35; -fx-background-color: linear-gradient(to bottom, #ffffff, #f9f5f0);">
@@ -42,10 +44,11 @@
             <TableView fx:id="table" prefHeight="500.0" styleClass="animate-fade">
                 <columns>
                     <TableColumn fx:id="workerNameCol" prefWidth="180" text="👤 Demandeur" />
-                    <TableColumn fx:id="dateCol" prefWidth="150" text="🗓️ Période" />
+                    <TableColumn fx:id="dateCol" prefWidth="250" text="🗓️ Période" />
+                    <TableColumn fx:id="durationCol" prefWidth="100" text="📅 Durée" />
                     <TableColumn fx:id="motifCol" prefWidth="250" text="📝 Motif" />
                     <TableColumn fx:id="statusCol" prefWidth="191.0" text="🚦 Statut" />
-                    <TableColumn fx:id="actionsCol" prefWidth="198.0" text="🛠 Actions">
+                    <TableColumn fx:id="actionsCol" prefWidth="250" text="🛠 Actions">
                         <styleClass>
                             <String fx:value="action-box" />
                         </styleClass>

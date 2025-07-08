@@ -87,3 +87,51 @@
     -fx-border-radius: 12;
     -fx-border-width: 1.5;
 }
+/* Attachment Container */
+.attachment-container {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 10;
+    -fx-padding: 5 0;
+}
+
+/* Upload Button - Gold Theme */
+#uploadButton {
+    -fx-background-color: transparent;
+    -fx-border-color: #C6A34F;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-text-fill: #C6A34F;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(198, 163, 79, 0.3), 5, 0.2, 0, 1);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+#uploadButton:hover {
+    -fx-background-color: rgba(198, 163, 79, 0.1);
+    -fx-text-fill: #D4B15F;
+    -fx-border-color: #D4B15F;
+    -fx-effect: dropshadow(gaussian, rgba(198, 163, 79, 0.5), 8, 0.3, 0, 2);
+}
+
+#uploadButton:pressed {
+    -fx-background-color: rgba(198, 163, 79, 0.2);
+    -fx-text-fill: #B89948;
+    -fx-border-color: #B89948;
+}
+
+/* Attachment Label - Gold Accent */
+.attachment-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #C6A34F;
+    -fx-font-style: italic;
+    -fx-padding: 5 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 1, 0.5, 0, 1);
+}
+
+/* Icon for visual enhancement (optional) */
+.attachment-label .ikonli-font-icon {
+    -fx-icon-color: #C6A34F;
+    -fx-icon-size: 16px;
+}

@@ -8,11 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.test.entities.DemandeConge;
+import tn.test.entities.Role;
 import tn.test.entities.Status;
 import tn.test.entities.User;
 import tn.test.services.DemandeCongeService;
@@ -26,6 +28,7 @@ import java.util.ResourceBundle;
 
 public class WorkerDashboardController implements Initializable {
 
+    @FXML private HBox btnStatistic;
     @FXML private Label welcomeLabel;
     @FXML private Label pendingCount;
     @FXML private Label acceptedCount;
@@ -44,9 +47,10 @@ public class WorkerDashboardController implements Initializable {
         acceptedCount.setText("0");
         refusedCount.setText("0");
         userCount.setText("0");
-
+        if(currentUser.getRole().equals(Role.SECRETAIRE))
+            btnStatistic.setVisible(false);
         // Welcome message with animation
-        welcomeLabel.setText("Bienvenue, " + currentUser.getName() + " (ADMIN)");
+        welcomeLabel.setText("Bienvenue, " + currentUser.getName() +"( " + displayStage(currentUser.getRole().name()) + " )");
 
         // Load statistics with animations
         loadStatistics();
@@ -55,10 +59,18 @@ public class WorkerDashboardController implements Initializable {
         loadRecentNotifications();
     }
 
+    private String displayStage(String value) {
+        return switch (value.toUpperCase()) {
+            case "ADMIN" -> "Directeur";
+            case "RH" -> "RH";
+            case "TOUS" -> "Tous";
+            default -> value;
+        };
+    }
+
     private void loadStatistics() {
         // Animate the counting up of numbers
         animateCount(pendingCount,
-                demandeService.countByStatus(Status.EN_ATTENTE_SECRETAIRE)
                         + demandeService.countByStatus(Status.EN_ATTENTE_RH)
                         + demandeService.countByStatus(Status.EN_ATTENTE_ADMIN));
 
@@ -66,7 +78,6 @@ public class WorkerDashboardController implements Initializable {
                 demandeService.countByStatus(Status.ACCEPTE));
 
         animateCount(refusedCount,
-                demandeService.countByStatus(Status.REFUSE_SECRETAIRE)
                         + demandeService.countByStatus(Status.REFUSE_RH)
                         + demandeService.countByStatus(Status.REFUSE_ADMIN));
 
@@ -148,11 +159,11 @@ public class WorkerDashboardController implements Initializable {
 
         // Add status-specific styling
         switch(demande.getStatus()) {
-            case EN_ATTENTE_SECRETAIRE, EN_ATTENTE_RH, EN_ATTENTE_ADMIN ->
+            case EN_ATTENTE_RH, EN_ATTENTE_ADMIN ->
                     item.getStyleClass().add("notification-pending");
             case ACCEPTE ->
                     item.getStyleClass().add("notification-approved");
-            case REFUSE_SECRETAIRE, REFUSE_RH, REFUSE_ADMIN ->
+            case REFUSE_RH, REFUSE_ADMIN ->
                     item.getStyleClass().add("notification-rejected");
         }
 
@@ -162,13 +173,9 @@ public class WorkerDashboardController implements Initializable {
 
     private String buildNotificationMessage(DemandeConge demande, String workerName, String type) {
         return switch (demande.getStatus()) {
-            case EN_ATTENTE_SECRETAIRE -> workerName + " a déposé une nouvelle demande de congé (" + type + ")";
-            case EN_ATTENTE_RH -> "Le Secrétaire a approuvé la demande de congé de " + workerName;
-            case EN_ATTENTE_ADMIN -> "Le RH a approuvé la demande de congé de " + workerName;
-            case ACCEPTE -> "La demande de congé de " + workerName + " a été approuvée par l'Admin";
-            case REFUSE_SECRETAIRE -> "La demande de congé de " + workerName + " a été refusée par le Secrétaire";
+            case ACCEPTE -> "La demande de congé de " + workerName + " a été approuvée par le Directeur";
             case REFUSE_RH -> "La demande de congé de " + workerName + " a été refusée par le RH";
-            case REFUSE_ADMIN -> "La demande de congé de " + workerName + " a été refusée par l'Admin";
+            case REFUSE_ADMIN -> "La demande de congé de " + workerName + " a été refusée par le Directeur";
             default -> "Mise à jour de la demande de congé de " + workerName;
         };
     }

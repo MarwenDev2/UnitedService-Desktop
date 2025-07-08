@@ -153,6 +153,23 @@ public class NotificationService implements CrudService<Notification> {
 
         return list;
     }
+    public List<Notification> findAllForDashboard() {
+        List<Notification> list = new ArrayList<>();
+        String sql = "SELECT * FROM notification ORDER BY timestamp DESC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                list.add(extractNotification(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 
     public List<Notification> findRecentActionsForAdmin(int adminId, int monthsBack) {
         List<Notification> list = new ArrayList<>();
@@ -182,6 +199,20 @@ public class NotificationService implements CrudService<Notification> {
 
         return list;
     }
+    public int countUnreadForDashboard() {
+        String sql = "SELECT COUNT(*) FROM notification WHERE is_read = false";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+
     public int countUnreadNotifications(int userId) {
         String sql = "SELECT COUNT(*) FROM notification WHERE recipient_id = ? AND is_read = false";
 

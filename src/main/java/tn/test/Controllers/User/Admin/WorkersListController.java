@@ -2,16 +2,24 @@ package tn.test.Controllers.User.Admin;
 
 import javafx.animation.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+import tn.test.Controllers.Shared;
+import tn.test.Controllers.Worker.LeaveHistoryController;
 import tn.test.entities.Worker;
 import tn.test.services.WorkerService;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -102,8 +110,67 @@ public class WorkersListController {
                 createStatusBadge(worker)
         );
 
-        card.getChildren().addAll(header, details);
+        // Action buttons
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.getStyleClass().add("button-container");
+
+        Button editButton = new Button("✏️ Modifier");
+        editButton.getStyleClass().add("edit-button");
+        editButton.setOnAction(e -> handleEditWorker(worker));
+
+        Button historyButton = new Button("📜 Historique");
+        historyButton.getStyleClass().add("history-button");
+        historyButton.setOnAction(e -> showLeaveHistory(worker));
+
+        buttonContainer.getChildren().addAll(editButton, historyButton);
+        card.getChildren().addAll(header, details, buttonContainer);
         return card;
+    }
+
+    private void showLeaveHistory(Worker worker) {
+        try {
+            Shared.setWorker(worker);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Worker/WorkerHistory.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Historique des congés");
+            Image icon = new Image(getClass().getResourceAsStream("/Images/logo.png"));
+            stage.getIcons().add(icon);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(workersContainer.getScene().getWindow());
+
+            stage.setScene(new Scene(root));
+
+            // Add fade-in animation
+            root.setOpacity(0);
+            stage.show();
+
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleEditWorker(Worker worker) {
+        try {
+            Shared.setEditMode(true);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User/Admin/AddWorker.fxml"));
+            Parent root = loader.load();
+
+            AddWorkerController controller = loader.getController();
+            controller.setWorkerForEdit(worker);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private HBox createDetailRow(String icon, String text) {
@@ -120,12 +187,48 @@ public class WorkersListController {
         return row;
     }
 
-    private Label createStatusBadge(Worker worker) {
-        Label badge = new Label(worker.getStatus().equalsIgnoreCase("actif") ? "ACTIF" : "INACTIF");
-        badge.getStyleClass().addAll("status-badge",
+    private HBox createStatusBadge(Worker worker) {
+        Label statusLabel = new Label(worker.getStatus().equalsIgnoreCase("actif") ? "ACTIF" : "INACTIF");
+        statusLabel.getStyleClass().addAll("status-badge",
                 worker.getStatus().equalsIgnoreCase("actif") ? "status-active" : "status-inactive");
-        return badge;
+
+        // Gestion du clic sur le badge pour changer le statut
+        statusLabel.setOnMouseClicked(event -> {
+            String newStatus = worker.getStatus().equalsIgnoreCase("actif") ? "inactif" : "actif";
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Changer le statut");
+            alert.setHeaderText(null);
+            alert.setContentText("Voulez-vous changer le statut de cet employé à \"" + newStatus.toUpperCase() + "\" ?");
+
+            ButtonType oui = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+            ButtonType non = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(oui, non);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == oui) {
+                    worker.setStatus(newStatus);
+                    workerService.update(worker); // mets à jour dans la base
+                    loadWorkers(); // recharge la liste
+                }
+            });
+        });
+
+        // Badge supplémentaire "EN CONGÉ"
+        Label congeLabel = null;
+        if (worker.getUsedCongeDays() > 0) {
+            congeLabel = new Label("EN CONGÉ");
+            congeLabel.getStyleClass().addAll("status-badge", "status-leave");
+        }
+
+        HBox statusContainer = new HBox(10);
+        statusContainer.getChildren().add(statusLabel);
+        if (congeLabel != null) {
+            statusContainer.getChildren().add(congeLabel);
+        }
+
+        return statusContainer;
     }
+
 
     private Image getAvatarImage(Worker worker) {
         try {

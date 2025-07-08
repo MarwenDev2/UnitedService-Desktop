@@ -2,6 +2,7 @@ package tn.test.Controllers.User.Admin;
 
 
 import javafx.animation.*;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -9,11 +10,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import tn.test.Controllers.Shared;
 import tn.test.entities.Worker;
 import tn.test.services.WorkerService;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +25,8 @@ import java.time.LocalDate;
 
 public class AddWorkerController {
 
+    @FXML private Button cancelButton;
+    @FXML private Label title;
     @FXML private VBox mainContainer;
     @FXML private TextField nameField;
     @FXML private TextField cinField;
@@ -37,19 +42,29 @@ public class AddWorkerController {
     @FXML private Label errorLabel;
     @FXML private ImageView profileImageView;
     @FXML private Label imagePathLabel;
-
+    private Worker workerToEdit = null;
+    private boolean isEditMode = Shared.isEditMode();
     private String imagePath = "";
     private final WorkerService workerService = new WorkerService();
+    @FXML private Button actionButton;
+    private boolean formModified = false;
 
     @FXML
     public void initialize() {
-        System.out.println("[INIT] Initializing controller...");
+        setupFormListeners();
 
-        // Debug ToggleGroup status
-        if (genderGroup == null) {
-            System.out.println("[INIT] Gender ToggleGroup is NULL!");
-        } else {
-            System.out.println("[INIT] Gender ToggleGroup initialized");
+        // Update button text based on mode
+        actionButton.textProperty().bind(
+                Bindings.when(Bindings.createBooleanBinding(() -> isEditMode))
+                        .then("Modifier")
+                        .otherwise("Ajouter")
+        );
+
+        // Disable button in edit mode until changes are made
+        if (isEditMode) {
+            actionButton.setDisable(true);
+            title.setText("Modifier Employé");
+            cancelButton.setVisible(true);
         }
 
         // Setup department choices
@@ -66,6 +81,30 @@ public class AddWorkerController {
         // Setup animations
         setupAnimations();
     }
+
+    private void setupFormListeners() {
+        // Add listeners to all fields
+        nameField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        cinField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        departmentCombo.valueProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        positionField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        phoneField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        emailField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        salaryField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        genderGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        birthDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        addressField.textProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+        totalDaysSpinner.valueProperty().addListener((obs, oldVal, newVal) -> checkFormModified());
+    }
+
+    private void checkFormModified() {
+        if (isEditMode) {
+            Worker currentFormData = createWorkerFromForm();
+            formModified = !currentFormData.equals(workerToEdit);
+            actionButton.setDisable(!formModified);
+        }
+    }
+
 
     private void setupAnimations() {
         FadeTransition fade = new FadeTransition(Duration.millis(500), mainContainer);
@@ -140,48 +179,77 @@ public class AddWorkerController {
         SequentialTransition sequence = new SequentialTransition(scaleIn, scaleOut);
         sequence.play();
     }
+    public void setWorkerForEdit(Worker worker) {
+        this.workerToEdit = worker;
+        populateForm(worker);
+    }
+
+    private void populateForm(Worker worker) {
+        nameField.setText(worker.getName());
+        cinField.setText(worker.getCin());
+        departmentCombo.setValue(worker.getDepartment());
+        positionField.setText(worker.getPosition());
+        phoneField.setText(worker.getPhone());
+        emailField.setText(worker.getEmail());
+        salaryField.setText(String.valueOf(worker.getSalary()));
+
+        // Set gender radio button
+        if (worker.getGender().equalsIgnoreCase("Homme")) {
+            genderGroup.selectToggle(genderGroup.getToggles().get(0));
+        } else {
+            genderGroup.selectToggle(genderGroup.getToggles().get(1));
+        }
+
+        birthDatePicker.setValue(worker.getDateOfBirth());
+        addressField.setText(worker.getAddress());
+        totalDaysSpinner.getValueFactory().setValue(worker.getTotalCongeDays());
+
+        // Load profile image if exists
+        if (worker.getProfileImagePath() != null && !worker.getProfileImagePath().isEmpty()) {
+            try {
+                String imagePath = "/Images/Users/" + worker.getProfileImagePath();
+                InputStream inputStream = getClass().getResourceAsStream(imagePath);
+                if (inputStream != null) {
+                    profileImageView.setImage(new Image(inputStream));
+                    imagePathLabel.setText(worker.getProfileImagePath());
+                    this.imagePath = worker.getProfileImagePath();
+                }
+            } catch (Exception e) {
+                System.err.println("Error loading profile image: " + e.getMessage());
+            }
+        }
+    }
 
     @FXML
     private void handleAddWorker() {
-        System.out.println("[DEBUG] Starting handleAddWorker...");
-
-        // Validate inputs
-        System.out.println("[DEBUG] Validating inputs...");
         if (!validateInputs()) {
-            System.out.println("[DEBUG] Validation failed!");
             return;
         }
-        System.out.println("[DEBUG] Inputs validated successfully");
-
         try {
-            System.out.println("[DEBUG] Creating worker object...");
             Worker worker = createWorkerFromForm();
-            System.out.println("[DEBUG] Worker object created: " + worker);
 
-            // Check if CIN already exists
-            System.out.println("[DEBUG] Checking for duplicate CIN...");
-            Worker existingWorker = workerService.findByCin(worker.getCin());
-            if (existingWorker != null) {
-                System.out.println("[DEBUG] Duplicate CIN found!");
-                showError("Un employé avec ce CIN existe déjà");
-                return;
-            }
-            System.out.println("[DEBUG] No duplicate CIN found");
-
-            System.out.println("[DEBUG] Attempting to add worker to database...");
-            boolean success = workerService.add(worker);
-            System.out.println("[DEBUG] WorkerService.add returned: " + success);
-
-            if (success) {
-                System.out.println("[DEBUG] Worker added successfully!");
-                showSuccess("Employé ajouté avec succès!");
-                clearForm();
+            if (isEditMode) {
+                worker.setId(workerToEdit.getId());
+                worker.setUsedCongeDays(workerToEdit.getUsedCongeDays());
+                workerService.update(worker);
+                showSuccess("Employé modifié avec succès!");
             } else {
-                System.out.println("[DEBUG] Failed to add worker!");
-                showError("Erreur lors de l'ajout de l'employé");
+                if (workerService.findByCin(worker.getCin()) != null) {
+                    showError("Un employé avec ce CIN existe déjà");
+                    return;
+                }
+                boolean success = workerService.add(worker);
+
+                if (success) {
+                    showSuccess("Employé ajouté avec succès!");
+                    clearForm();
+                } else {
+                    showError("Erreur lors de l'ajout de l'employé");
+                }
             }
+
+            clearForm();
         } catch (Exception e) {
-            System.out.println("[DEBUG] Exception occurred:");
             e.printStackTrace();
             showError("Erreur: " + e.getMessage());
         }
@@ -194,8 +262,13 @@ public class AddWorkerController {
         worker.setPosition(positionField.getText().trim());
         worker.setPhone(phoneField.getText().trim());
         worker.setEmail(emailField.getText().trim());
-        worker.setSalary(Float.parseFloat(salaryField.getText().trim()));
-        worker.setGender(genderGroup.getSelectedToggle().getUserData().toString());
+        String salaryText = salaryField.getText().trim();
+        worker.setSalary(salaryText.isEmpty() ? 0f : Float.parseFloat(salaryText));
+        if (genderGroup.getSelectedToggle() != null) {
+            worker.setGender(genderGroup.getSelectedToggle().getUserData().toString());
+        } else {
+            worker.setGender(""); // ou null selon ta logique
+        }
         worker.setDateOfBirth(birthDatePicker.getValue());
         worker.setAddress(addressField.getText().trim());
         worker.setCreationDate(LocalDate.now());

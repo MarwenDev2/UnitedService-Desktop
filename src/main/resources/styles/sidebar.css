@@ -137,3 +137,69 @@
 .submenu-animate {
     -fx-animation: slideIn 0.3s ease-out;
 }
+
+
+
+
+.notification-popup {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.notification-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+}
+
+.notification-empty {
+    -fx-text-fill: #777;
+    -fx-font-size: 13px;
+}
+
+.notification-card {
+    -fx-padding: 10;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.notification-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+}
+
+.notification-mark-read {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-text-fill: #43A047;
+    -fx-cursor: hand;
+}
+
+
+.notification-mark-read:hover {
+    -fx-background-color: #FFD700;
+}
+
+.notification-badge {
+    -fx-background-color: #ff4444;
+    -fx-background-radius: 10;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-padding: 0 4 0 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0.5, 0, 1);
+}
+
+.notification-badge:empty {
+    -fx-min-width: 10;
+    -fx-min-height: 10;
+    -fx-padding: 0;
+}

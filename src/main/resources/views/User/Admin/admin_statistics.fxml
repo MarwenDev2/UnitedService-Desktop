@@ -38,6 +38,4 @@
             <NumberAxis label="Nombre"/>
         </yAxis>
     </BarChart>
-
-    <Button text="⬅ Retour" onAction="#backToDashboard" styleClass="back-button"/>
 </VBox>

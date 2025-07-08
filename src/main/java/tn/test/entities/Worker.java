@@ -1,6 +1,7 @@
 package tn.test.entities;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Worker {
 
@@ -171,5 +172,27 @@ public class Worker {
 
     public void setUsedCongeDays(int usedCongeDays) {
         this.usedCongeDays = usedCongeDays;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Worker worker = (Worker) o;
+        return Float.compare(worker.salary, salary) == 0 &&
+                totalCongeDays == worker.totalCongeDays &&
+                usedCongeDays == worker.usedCongeDays &&
+                Objects.equals(name, worker.name) &&
+                Objects.equals(cin, worker.cin) &&
+                Objects.equals(department, worker.department) &&
+                Objects.equals(position, worker.position) &&
+                Objects.equals(phone, worker.phone) &&
+                Objects.equals(email, worker.email) &&
+                Objects.equals(profileImagePath, worker.profileImagePath) &&
+                Objects.equals(gender, worker.gender) &&
+                Objects.equals(dateOfBirth, worker.dateOfBirth) &&
+                Objects.equals(address, worker.address) &&
+                Objects.equals(creationDate, worker.creationDate) &&
+                Objects.equals(status, worker.status);
     }
 }

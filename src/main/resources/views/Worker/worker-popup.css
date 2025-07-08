@@ -1,0 +1,46 @@
+.popup-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+}
+
+.worker-card {
+    -fx-background-color: #f4f9ff;
+    -fx-padding: 15;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-alignment: center;
+}
+
+.card-header .worker-avatar {
+    -fx-border-radius: 50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.worker-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.worker-position {
+    -fx-text-fill: #555;
+}
+
+.detail-row {
+    -fx-alignment: center-left;
+}
+
+.detail-row .label {
+    -fx-font-size: 14px;
+}
+
+.btn-close {
+    -fx-background-color: #009688;
+    -fx-text-fill: white;
+    -fx-padding: 6 12;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}

@@ -30,7 +30,7 @@
                     <Button fx:id="btnDashboard" onAction="#goToDashboard" styleClass="sidebar-button" text="🏠 Tableau de Bord"/>
                     <Button fx:id="btnBlog" onAction="#goToDemandes" styleClass="sidebar-button" text="📰 Demandes Congés"/>
                     <!-- Utilisateurs Section with Submenu -->
-                    <VBox spacing="0">
+                    <VBox fx:id="usersSubmenuVBOX" spacing="0">
                         <Button fx:id="btnUsers" onAction="#toggleUsersSubmenu" styleClass="sidebar-button" text="👥 Utilisateurs">
                             <graphic>
                                 <ImageView fitHeight="16" fitWidth="16" preserveRatio="true">
@@ -47,7 +47,7 @@
                                 </graphic>
                                 <text>Liste des Employés</text>
                             </Button>
-                            <Button fx:id="btnAddWorker" onAction="#goToAddWorker" styleClass="sidebar-sub-button">
+                            <Button fx:id="btnAddWorker" onAction="#goToAddWorker" visible="false" styleClass="sidebar-sub-button">
                                 <graphic>
                                     <Text style="-fx-font-family: 'Segoe UI Emoji'; -fx-font-size: 14;">➕</Text>
                                 </graphic>
@@ -55,6 +55,7 @@
                             </Button>
                         </VBox>
                     </VBox>
+                    <Button fx:id="demandeCongeButton" text="📝 Postuler Demande de congé" onAction="#goToDemandeConge" visible="false" styleClass="sidebar-button"/>
                 </VBox>
             </children>
         </VBox>
@@ -67,9 +68,13 @@
                 <Button fx:id="toggleSidebarBtn" text="☰" onAction="#toggleSidebar" styleClass="toggle-button"/>
                 <Label fx:id="navTitle" text="United Service" styleClass="navbar-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <StackPane>
+                    <Button fx:id="notificationBtn" text="🔔" styleClass="notification-btn"/>
+                    <Label fx:id="notificationBadge" styleClass="notification-badge"
+                           visible="false" StackPane.alignment="TOP_RIGHT"/>
+                </StackPane>
                 <MenuButton fx:id="profileMenu" text="👤 Mohamed ▼" styleClass="profile-menu">
                     <items>
-                        <MenuItem onAction="#goToProfile" text="Mon Profil"/>
                         <MenuItem text="Déconnexion" onAction="#goToLogout"/>
                     </items>
                 </MenuButton>

@@ -4,6 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane fx:id="rootPane" prefHeight="700.0" prefWidth="1000.0"
             stylesheets="@PostulerConge.css"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -12,7 +15,7 @@
     <center>
         <VBox fx:id="mainContainer" spacing="30" alignment="TOP_CENTER" styleClass="main-container">
 
-            <Label text="Demande de Congé" styleClass="page-title" />
+            <Label visible="false" fx:id="WorkerLabel"  styleClass="page-title" />
 
             <GridPane hgap="20" vgap="18" styleClass="form-grid">
                 <columnConstraints>
@@ -32,14 +35,33 @@
                 <Label text="Motif:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
                 <TextArea fx:id="reasonField" prefRowCount="3" wrapText="true"
                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <!-- Replace your current HBox with this -->
+                <HBox alignment="CENTER_LEFT" spacing="10" styleClass="attachment-container"
+                      GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <Button fx:id="uploadButton" text=" Joindre un document" onAction="#handleFileUpload"
+                            styleClass="upload-button">
+                        <graphic>
+                            <ImageView fitWidth="16" fitHeight="16">
+                                <Image url="@/Images/attach-document.png" />
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Label fx:id="attachmentLabel" styleClass="attachment-label">
+                        <graphic>
+                            <ImageView fitWidth="16" fitHeight="16">
+                                <Image url="@/Images/attach-document.png" />
+                            </ImageView>
+                        </graphic>
+                    </Label>
+                </HBox>
             </GridPane>
 
             <HBox spacing="15" alignment="CENTER">
                 <Button fx:id="submitButton" text="Envoyer la demande" styleClass="primary-button"/>
-                <Button text="Annuler" onAction="#cancel" styleClass="secondary-button"/>
+                <Button text="Retappez CIN" onAction="#cancel" styleClass="secondary-button"/>
             </HBox>
 
-            <Label fx:id="errorLabel" text="" styleClass="feedback-label"/>
+            <Label fx:id="errorLabel" styleClass="feedback-label"/>
         </VBox>
     </center>
 

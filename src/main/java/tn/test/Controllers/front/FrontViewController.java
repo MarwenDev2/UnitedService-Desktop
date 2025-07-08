@@ -36,7 +36,7 @@ public class FrontViewController implements Initializable {
     @FXML private ImageView logoImage, menuAvatar;
     @FXML private Label profileNameLabel, activePageLabel, roleLabel, notificationBadge;
     @FXML private StackPane contentPane;
-    @FXML private Button accueilButton, btnFavoris, demandeCongeButton, historiqueButton;
+    @FXML private Button accueilButton, demandeCongeButton, historiqueButton;
     @FXML private MenuButton profileMenu;
     @FXML private Button notificationBtn;
 
@@ -198,14 +198,9 @@ public class FrontViewController implements Initializable {
     }
 
     // ------------------- NAVIGATION METHODS -------------------
-    private void loadView(String fxmlPath) {
+    public void loadView(String fxmlPath) {
         try {
-            String fullPath = fxmlPath.startsWith("/") ? fxmlPath : "/front/" + fxmlPath;
-            URL resource = getClass().getResource(fullPath);
-            if (resource == null) {
-                System.err.println("❌ Fichier FXML non trouvé : " + fullPath);
-                return;
-            }
+            URL resource = getClass().getResource(fxmlPath);
             Parent view = FXMLLoader.load(resource);
             contentPane.getChildren().setAll(view);
         } catch (IOException e) {
@@ -240,13 +235,6 @@ public class FrontViewController implements Initializable {
         activePageLabel.setText("Page d'utilisateur");
         loadView("/views/Worker/WorkerHome.fxml");
         setActiveButton(accueilButton);
-    }
-
-    @FXML
-    public void goToFavoris() {
-        setActiveButton(btnFavoris);
-        activePageLabel.setText("Favoris ❤️");
-        loadView("/front/produit/FavorisView.fxml");
     }
 
     @FXML
