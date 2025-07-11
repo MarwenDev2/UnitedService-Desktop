@@ -16,8 +16,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.test.Controllers.Shared;
 import tn.test.Controllers.Worker.LeaveHistoryController;
+import tn.test.entities.Role;
+import tn.test.entities.User;
 import tn.test.entities.Worker;
 import tn.test.services.WorkerService;
+import tn.test.tools.SessionManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +34,7 @@ public class WorkersListController {
     @FXML private Label totalWorkersLabel;
     @FXML private Label activeWorkersLabel;
     @FXML private Label onLeaveLabel;
-
+    private final User currentUser = SessionManager.getInstance().getCurrentUser();
     private final WorkerService workerService = new WorkerService();
 
     @FXML
@@ -116,13 +119,15 @@ public class WorkersListController {
 
         Button editButton = new Button("✏️ Modifier");
         editButton.getStyleClass().add("edit-button");
+        if(currentUser.getRole().equals(Role.ADMIN))
+            editButton.setVisible(false);
         editButton.setOnAction(e -> handleEditWorker(worker));
 
         Button historyButton = new Button("📜 Historique");
         historyButton.getStyleClass().add("history-button");
         historyButton.setOnAction(e -> showLeaveHistory(worker));
 
-        buttonContainer.getChildren().addAll(editButton, historyButton);
+        buttonContainer.getChildren().addAll(historyButton, editButton);
         card.getChildren().addAll(header, details, buttonContainer);
         return card;
     }
@@ -193,25 +198,27 @@ public class WorkersListController {
                 worker.getStatus().equalsIgnoreCase("actif") ? "status-active" : "status-inactive");
 
         // Gestion du clic sur le badge pour changer le statut
-        statusLabel.setOnMouseClicked(event -> {
-            String newStatus = worker.getStatus().equalsIgnoreCase("actif") ? "inactif" : "actif";
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Changer le statut");
-            alert.setHeaderText(null);
-            alert.setContentText("Voulez-vous changer le statut de cet employé à \"" + newStatus.toUpperCase() + "\" ?");
+        if (currentUser.getRole().equals(Role.RH)) {
+            statusLabel.setOnMouseClicked(event -> {
+                String newStatus = worker.getStatus().equalsIgnoreCase("actif") ? "inactif" : "actif";
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Changer le statut");
+                alert.setHeaderText(null);
+                alert.setContentText("Voulez-vous changer le statut de cet employé à \"" + newStatus.toUpperCase() + "\" ?");
 
-            ButtonType oui = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
-            ButtonType non = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(oui, non);
+                ButtonType oui = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
+                ButtonType non = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(oui, non);
 
-            alert.showAndWait().ifPresent(response -> {
-                if (response == oui) {
-                    worker.setStatus(newStatus);
-                    workerService.update(worker); // mets à jour dans la base
-                    loadWorkers(); // recharge la liste
-                }
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == oui) {
+                        worker.setStatus(newStatus);
+                        workerService.update(worker); // mets à jour dans la base
+                        loadWorkers(); // recharge la liste
+                    }
+                });
             });
-        });
+        }
 
         // Badge supplémentaire "EN CONGÉ"
         Label congeLabel = null;

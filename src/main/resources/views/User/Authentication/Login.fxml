@@ -41,9 +41,10 @@
 
 
                 <HBox spacing="5" alignment="CENTER">
-                    <Label text="Not Stuff Member" styleClass="text-muted"/>
-                    <Hyperlink fx:id="workerLink" text="Worker Page !" styleClass="link-primary"/>
+                    <Label visible="false" text="Not Stuff Member" styleClass="text-muted"/>
+                    <Hyperlink visible="false" fx:id="workerLink" text="Worker Page !" styleClass="link-primary"/>
                 </HBox>
+
             </VBox>
             <VBox fx:id="workerContainer" alignment="CENTER" spacing="20" styleClass="login-container" maxWidth="350" visible="false" managed="false">
                 <ImageView fitWidth="180" fitHeight="80" pickOnBounds="true" preserveRatio="true"
